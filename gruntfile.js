@@ -19,6 +19,7 @@ module.exports = function (grunt) {
     }
   });
   
+  grunt.task.loadNpmTasks('grunt-contrib-copy');
   grunt.registerTask(
     'new',
     'Create a new site using the STACHE boilerplate.',
@@ -36,5 +37,9 @@ module.exports = function (grunt) {
       }
     }
   );
+  
+  grunt.registerTask('default', function() {
+    grunt.fail.warn('stache-cli only supports "new" task.');
+  });
     
 };
