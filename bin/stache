@@ -8,13 +8,13 @@
 'use strict';
 
 // Libraries
-var fs = require('fs');
 var path = require('path');
 var shell = require('child_process').exec;
 var cli = path.normalize(__dirname + '/../');
 var cwd = path.normalize(process.cwd() + '/');
 var gruntconfig = 'gruntfile.js';
-var gruntfile = (fs.lstatSync(cwd + gruntconfig).isFile() ? cwd : cli) + gruntconfig;
+var gruntfile = (path.exists(cwd + gruntconfig) ? cwd : cli) + gruntconfig;
+
 
 // Configuration
 var options = { cwd: cwd };
