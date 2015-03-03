@@ -24,6 +24,7 @@ module.exports = function (grunt) {
     'new',
     'Create a new site using the STACHE boilerplate.',
     function(dir) {
+      dir = grunt.option('cwd') + dir;
       if (!dir) {
         grunt.fail.fatal('Please specify a folder.');
       } else if (grunt.file.exists(dir)) {

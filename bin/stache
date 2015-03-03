@@ -25,6 +25,7 @@ var args = [
   'grunt',
   process.argv.slice(2).join(':'),
   '--cli=' + cli,
+  '--cwd=' + cwd,
   '--gruntfile=' + gruntfile,
   '--base=' + (isLocal ? cwd : cli)
 ];
