@@ -1,0 +1,24 @@
+{
+  "author": {
+    "name": "Blackbaud - Bobby Earl"
+  },
+  "name": "blackbaud-stache-cli",
+  "version": "0.1.5",
+  "description": "Blackbuad Stache CLI",
+  "private": false,
+  "preferGlobal": true,
+  "bin": {
+    "stache": "bin/stache"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackbaud-community/stache-cli.git"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/blackbaud-community/stache-cli/issues"
+  },
+  "dependencies": {
+    "grunt": "^0.4.5"
+  }
+}
