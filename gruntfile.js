@@ -2,9 +2,6 @@
 /*jslint node: true, nomen: true, plusplus: true */
 'use strict';
 
-// For merging our YAML files
-var merge = require('merge');
-
 module.exports = function (grunt) {
 
   grunt.config.init({
