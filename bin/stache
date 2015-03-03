@@ -8,18 +8,22 @@
 'use strict';
 
 // Libraries
+var fs = require('fs');
 var path = require('path');
 var shell = require('child_process').exec;
+var cli = path.normalize(__dirname + '/../');
 var cwd = path.normalize(process.cwd() + '/');
+var gruntconfig = 'gruntfile.js';
+var gruntfile = (fs.lstatSync(cwd + gruntconfig).isFile() ? cwd : cli) + gruntconfig;
 
 // Configuration
 var options = { cwd: cwd };
 var args = [
   'grunt',
   process.argv.slice(2).join(':'),
-  '--cli=' + path.normalize(__dirname + '/../'),
-  '--gruntfile=' + cwd + 'gruntfile.js',
-  '--base=' + path.normalize(process.cwd() + '/')
+  '--cli=' + cli,
+  '--gruntfile=' + gruntfile,
+  '--base=' + cwd
 ];
 
 // Execution

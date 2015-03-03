@@ -3,7 +3,7 @@
     "name": "Blackbaud - Bobby Earl"
   },
   "name": "blackbaud-stache-cli",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Blackbuad Stache CLI",
   "private": false,
   "preferGlobal": true,
@@ -19,6 +19,7 @@
     "url": "https://github.com/blackbaud-community/stache-cli/issues"
   },
   "dependencies": {
+    "blackbaud-stache": "^0.1.6",
     "grunt": "^0.4.5"
   }
 }
