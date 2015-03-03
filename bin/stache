@@ -29,6 +29,13 @@ var args = [
   '--base=' + (isLocal ? cwd : cli)
 ];
 
+// Verify user ran npm install (if we're running locally)
+if (isLocal) {
+  if (!fs.existsSync(cwd + 'node_modules')) {
+    console.error('You must run "npm install" before using Blackbaud Stache.');
+  }
+}
+
 // Execution
 var grunt = shell(args.join(' '), options);
 var output = function (data) {
