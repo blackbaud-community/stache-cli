@@ -26,14 +26,11 @@ module.exports = function (grunt) {
     function(dir) {
       if (!dir) {
         grunt.fail.fatal('Please specify a folder.');
+      } else if (grunt.file.exists(dir)) {
+        grunt.fail.fatal('The folder "' + dir + '" must not exist.')
       } else {
-        dir = grunt.option('cwd') + dir;
-        if (grunt.file.exists(dir)) {
-          grunt.fail.fatal('The folder "' + dir + '" must not exist.')
-        } else {
-          grunt.config('boilerplateDest', dir);
-          grunt.task.run('copy:boilerplate');
-        }
+        grunt.config('boilerplateDest', dir);
+        grunt.task.run('copy:boilerplate');
       }
     }
   );
