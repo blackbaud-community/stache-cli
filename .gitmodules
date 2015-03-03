@@ -1,0 +1,3 @@
+[submodule "boilerplate"]
+	path = boilerplate
+	url = git@github.com:blackbaud-community/stache-boilerplate
