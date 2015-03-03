@@ -14,10 +14,9 @@ var shell = require('child_process').exec;
 var cli = path.normalize(__dirname + '/../');
 var cwd = path.normalize(process.cwd() + '/');
 
-var isLocal = fs.existsSync(cwd + gruntconfig);
 var gruntconfig = 'gruntfile.js';
+var isLocal = fs.existsSync(cwd + gruntconfig);
 var gruntfile = (isLocal ? cwd : cli) + gruntconfig;
-
 
 // Configuration
 var options = { cwd: cwd };
