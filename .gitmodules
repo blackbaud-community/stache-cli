@@ -1,3 +1,4 @@
-[submodule "stache-boilerplate-update"]
-	path = boilerplate
+[submodule "stache-boilerplate"]
+	path = stache-boilerplate
 	url = git@github.com:blackbaud-community/stache-boilerplate.git
+	branch = master
