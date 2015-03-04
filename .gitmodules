@@ -1,0 +1,3 @@
+[submodule "stache-boilerplate-update"]
+	path = boilerplate
+	url = git@github.com:blackbaud-community/stache-boilerplate.git
