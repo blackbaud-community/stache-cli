@@ -10,7 +10,7 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: 'boilerplate/',
+            cwd: 'stache-boilerplate/',
             src: '**',
             dest: '<%= boilerplateDest %>'
           }
