@@ -20,7 +20,12 @@ module.exports = function (grunt) {
     }
   });
   
-  grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.registerTask('fixIgnore', function() {
+    var dir = grunt.config('boilerplateDest') + '\\';
+    grunt.file.copy(dir + '.npmignore', dir + '.gitignore');
+    grunt.file.delete(dir + '.npmignore', { force: true });    
+  });
+  
   grunt.registerTask(
     'new',
     'Create a new site using the STACHE boilerplate.',
@@ -33,6 +38,7 @@ module.exports = function (grunt) {
       } else {
         grunt.config('boilerplateDest', dir);
         grunt.task.run('copy:boilerplate');
+        grunt.task.run('fixIgnore');
       }
     }
   );
@@ -40,5 +46,7 @@ module.exports = function (grunt) {
   grunt.registerTask('default', function() {
     grunt.fail.warn('stache-cli only supports "new" task.');
   });
+  
+  grunt.loadNpmTasks('grunt-contrib-copy');
     
 };
