@@ -17,32 +17,38 @@ var cwd = path.normalize(process.cwd() + '/');
 var gruntconfig = 'gruntfile.js';
 var isLocal = fs.existsSync(cwd + gruntconfig);
 var gruntfile = (isLocal ? cwd : cli) + gruntconfig;
-
-// Configuration
-var options = { cwd: cwd };
-var args = [
-  'grunt',
-  process.argv.slice(2).join(':'),
+var options = {
+  cwd : cwd,
+  maxBuffer: 1048576
+};
+var commands = [];
+var flags = [
   '--cli=' + cli,
   '--cwd=' + cwd,
   '--gruntfile=' + gruntfile,
   '--base=' + (isLocal ? cwd : cli)
 ];
 
-// Verify user ran npm install (if we're running locally)
-if (isLocal) {
-  if (!fs.existsSync(cwd + 'node_modules')) {
-    console.error('You must run "npm install" before using Blackbaud Stache.');
+// Split command line options into grunt commands vs flags, ignores first two as they're node paths
+process.argv.slice(2).forEach(function(item) {
+  if (item.indexOf('--') === 0) {
+    flags.push(item);
+  } else {
+    commands.push(item);
   }
-}
+});
 
-// Execution
-var grunt = shell(args.join(' '), options);
-var output = function (data) {
- process.stdout.write(data);
-};
+// Build the shell command we're going to run
+var run = [
+  'grunt',
+  commands.join(':'),
+  flags.join(' ')
+];
+
+// Execute shell command
+var grunt = shell(run.join(' '), options);
 
 // Event Listening
-grunt.stdout.on('data', output);
-grunt.stderr.on('data', output);
-grunt.on('error', output);
+grunt.stdout.on('data', function(d) { console.log(d); });
+grunt.stderr.on('data', function(d) { console.log(d); });
+grunt.on('error', function(e) { console.log(e) });
