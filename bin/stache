@@ -23,6 +23,7 @@ var options = {
 };
 var commands = [];
 var flags = [
+  '--color',
   '--cli=' + cli,
   '--cwd=' + cwd,
   '--gruntfile=' + gruntfile,
@@ -49,6 +50,6 @@ var run = [
 var grunt = shell(run.join(' '), options);
 
 // Event Listening
-grunt.stdout.on('data', function(d) { console.log(d); });
-grunt.stderr.on('data', function(d) { console.log(d); });
+grunt.stdout.on('data', function(d) { process.stdout.write(d); });
+grunt.stderr.on('data', function(d) { process.stderr.write(d); });
 grunt.on('error', function(e) { console.log(e) });
