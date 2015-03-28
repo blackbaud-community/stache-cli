@@ -15,8 +15,9 @@ var cli = path.normalize(__dirname + '/../');
 var cwd = path.normalize(process.cwd() + '/');
 
 var gruntconfig = 'gruntfile.js';
+var isPrepare = process.argv.length > 2 && process.argv[2] === 'prepare';
 var isLocal = fs.existsSync(cwd + gruntconfig);
-var gruntfile = (isLocal ? cwd : cli) + gruntconfig;
+var gruntfile = ((!isPrepare && isLocal) ? cwd : cli) + gruntconfig;
 var options = {
   cwd : cwd,
   maxBuffer: 1048576
@@ -27,7 +28,7 @@ var flags = [
   '--cli=' + cli,
   '--cwd=' + cwd,
   '--gruntfile=' + gruntfile,
-  '--base=' + (isLocal ? cwd : cli)
+  '--base=' + ((!isPrepare && isLocal) ? cwd : cli)
 ];
 
 // Split command line options into grunt commands vs flags, ignores first two as they're node paths

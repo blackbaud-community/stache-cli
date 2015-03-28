@@ -5,6 +5,17 @@
 module.exports = function (grunt) {
 
   grunt.config.init({
+    shell: {
+      options: {
+        execOptions: {
+          cwd: grunt.option('cwd'),
+          stdout: true
+        }
+      },
+      prepare: {
+        command: 'npm install --production && npm dedupe'
+      }
+    },
     copy: {
       boilerplate: {
         files: [
@@ -43,10 +54,23 @@ module.exports = function (grunt) {
     }
   );
   
+  grunt.registerTask(
+    'prepare',
+    'Install the necessary requirements for Blackbaud Stache.',
+    'shell:prepare'
+  );
+  
+  grunt.registerTask(
+    'update',
+    'Updates local npm packages and blackbaud-stache-cli globally',
+    'shell:update'
+  );
+  
   grunt.registerTask('default', function() {
     grunt.fail.warn('stache-cli only supports "new" task.');
   });
   
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-shell');
     
 };
