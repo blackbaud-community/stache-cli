@@ -32,7 +32,7 @@ module.exports = function (grunt) {
   });
   
   grunt.registerTask('fixIgnore', function() {
-    var dir = grunt.config('boilerplateDest') + '\\';
+    var dir = grunt.config('boilerplateDest') + '/';
     grunt.file.copy(dir + '.npmignore', dir + '.gitignore');
     grunt.file.delete(dir + '.npmignore', { force: true });    
   });
