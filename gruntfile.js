@@ -66,9 +66,14 @@ module.exports = function (grunt) {
     'shell:update'
   );
   
-  grunt.registerTask('default', function() {
-    grunt.fail.warn('stache-cli only supports "new" task.');
+  grunt.registerTask(
+    'version',
+    'Display the current installed version.',
+    function() {
+      grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
   });
+  
+  grunt.registerTask('default', 'version');
   
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
