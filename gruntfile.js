@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         }
       },
       prepare: {
-        command: 'npm install --production && npm dedupe'
+        command: 'npm cache clean && npm install --production && npm dedupe'
       }
     },
     copy: {
@@ -30,13 +30,13 @@ module.exports = function (grunt) {
       }
     }
   });
-  
+
   grunt.registerTask('fixIgnore', function() {
     var dir = grunt.config('boilerplateDest') + '/';
     grunt.file.copy(dir + '.npmignore', dir + '.gitignore');
-    grunt.file.delete(dir + '.npmignore', { force: true });    
+    grunt.file.delete(dir + '.npmignore', { force: true });
   });
-  
+
   grunt.registerTask(
     'new',
     'Create a new site using the STACHE boilerplate.',
@@ -53,29 +53,29 @@ module.exports = function (grunt) {
       }
     }
   );
-  
+
   grunt.registerTask(
     'prepare',
     'Install the necessary requirements for Blackbaud Stache.',
     'shell:prepare'
   );
-  
+
   grunt.registerTask(
     'update',
     'Updates local npm packages and blackbaud-stache-cli globally',
     'shell:update'
   );
-  
+
   grunt.registerTask(
     'version',
     'Display the current installed version.',
     function() {
       grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
   });
-  
+
   grunt.registerTask('default', 'version');
-  
+
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
-    
+
 };
