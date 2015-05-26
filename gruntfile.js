@@ -67,13 +67,13 @@ module.exports = function (grunt) {
   );
 
   grunt.registerTask(
-    'version',
-    'Display the current installed version.',
+    'cli-version',
+    'Display the current installed cli version.',
     function() {
       grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
   });
 
-  grunt.registerTask('default', 'version');
+  grunt.registerTask('default', 'cli-version');
 
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-shell');
