@@ -13,7 +13,7 @@ module.exports = function (grunt) {
         }
       },
       prepare: {
-        command: 'npm cache clean && npm install --production'
+        command: 'npm cache clean && npm install'
       }
     },
     copy: {
