@@ -1,0 +1,41 @@
+# =============================================
+# PRODUCT
+# =============================================
+product_name_long: My project or team name
+product_name_short: Your New Website
+title: <%= stache.config.product_name_short %> Documentation
+
+omnibar_title: <%= stache.config.product_name_short %>
+omnibar_link: <%= stache.config.base %>
+omnibar_link_enabled: true
+
+# omnibar_search: true
+
+files:
+  css:
+    - /assets/css/prism.css
+    - /assets/css/custom.css
+
+  js:
+    - /assets/js/prism.js
+    #- /assets/js/custom.js
+
+stache_docs: http://blackbaud-stache.azurewebsites.net/
+stache_docs_docs: <%= stache.config.stache_docs %>docs/
+stache_docs_navpatterns: <%= stache.config.stache_docs %>patterns/
+stache_docs_tutorials: <%= stache.config.stache_docs %>tutorials/
+stache_docs_resources: <%= stache.config.stache_docs %>resources/
+stache_docs_resources_faq: <%= stache.config.stache_docs %>resources/faq
+stache_docs_resources_videos: <%= stache.config.stache_docs %>resources/videos/
+
+yaml_pattern: <%= stache.config.base %>yaml-pattern/
+showcase_pattern: <%= stache.config.base %>showcase-pattern/
+sidebar_pattern: <%= stache.config.base %>sidebar-pattern/
+
+
+# =============================================
+# BLOG
+# =============================================
+blog: <%= stache.config.base %>blog/
+comments: true
+comments_key: blackbaudstache
