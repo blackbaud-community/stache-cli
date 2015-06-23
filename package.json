@@ -3,7 +3,7 @@
     "name": "Blackbaud - Bobby Earl"
   },
   "name": "blackbaud-stache-cli",
-  "version": "0.2.51",
+  "version": "0.2.52",
   "description": "Blackbuad Stache CLI",
   "private": false,
   "preferGlobal": true,
@@ -22,5 +22,6 @@
     "grunt": "^0.4.5",
     "grunt-contrib-copy": "^0.8.0",
     "grunt-shell": "^1.1.2"
-  }
+  },
+  "scripts": {}
 }
