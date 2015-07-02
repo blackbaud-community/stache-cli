@@ -32,6 +32,14 @@ yaml_pattern: <%= stache.config.base %>yaml-pattern/
 showcase_pattern: <%= stache.config.base %>showcase-pattern/
 sidebar_pattern: <%= stache.config.base %>sidebar-pattern/
 
+# =============================================
+# ADMIN TOOLBAR
+# =============================================
+showAdminToolbar: true
+github_repo: ENTER_GITHUB_REPO_HERE
+github_branch: ENTER_BRANCH_NAME_HERE
+github_token: ENTER_TOKEN_HERE
+
 
 # =============================================
 # BLOG
