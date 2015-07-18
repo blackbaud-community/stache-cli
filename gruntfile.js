@@ -11,9 +11,6 @@ module.exports = function (grunt) {
           cwd: grunt.option('cwd'),
           stdout: true
         }
-      },
-      prepare: {
-        command: 'npm cache clean && npm install'
       }
     },
     copy: {
@@ -57,7 +54,10 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'prepare',
     'Install the necessary requirements for Blackbaud Stache.',
-    'shell:prepare'
+    function () {
+      grunt.log.error('DEPRECATED');
+      grunt.log.error('Please run "npm install --production" instead.');
+    }
   );
 
   grunt.registerTask(
