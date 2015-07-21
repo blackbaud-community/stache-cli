@@ -13,11 +13,8 @@ omnibar_link_enabled: true
 
 files:
   css:
-    - /assets/css/prism.css
     - /assets/css/custom.css
-
   js:
-    - /assets/js/prism.js
     #- /assets/js/custom.js
 
 stache_docs: http://blackbaud-stache.azurewebsites.net/
