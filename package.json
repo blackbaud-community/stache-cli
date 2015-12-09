@@ -12,11 +12,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/blackbaud-community/stache-cli.git"
+    "url": "https://github.com/blackbaud/stache-cli.git"
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/blackbaud-community/stache-cli/issues"
+    "url": "https://github.com/blackbaud/stache-cli/issues"
   },
   "dependencies": {
     "grunt": "^0.4.5",
