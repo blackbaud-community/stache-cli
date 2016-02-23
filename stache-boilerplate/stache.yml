@@ -5,11 +5,10 @@ product_name_long: My project or team name
 product_name_short: Your New Website
 title: <%= stache.config.product_name_short %> Documentation
 
-omnibar_title: <%= stache.config.product_name_short %>
-omnibar_link: <%= stache.config.base %>
-omnibar_link_enabled: true
-
-# omnibar_search: true
+omnibar:
+  serviceName: <%= stache.config.product_name_short %>
+  serviceNameLink: <%= stache.config.base %>
+  enableServiceNameLink: true
 
 files:
   css:
@@ -36,7 +35,6 @@ showAdminToolbar: true
 github_repo: ENTER_GITHUB_REPO_HERE
 github_branch: ENTER_BRANCH_NAME_HERE
 github_token: ENTER_TOKEN_HERE
-
 
 # =============================================
 # BLOG
