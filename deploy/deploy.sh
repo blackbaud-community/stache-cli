@@ -22,11 +22,39 @@ notifySlack() {
   fi
 }
 
+# Necessary in the Azure Environment
+selectNodeVersion () {
+  if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
+    SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
+    eval $SELECT_NODE_VERSION
+    exitWithMessageOnError "select node version failed"
+
+    if [[ -e "$DEPLOYMENT_TEMP/__nodeVersion.tmp" ]]; then
+      NODE_EXE=`cat "$DEPLOYMENT_TEMP/__nodeVersion.tmp"`
+      exitWithMessageOnError "getting node version failed"
+    fi
+
+    if [[ -e "$DEPLOYMENT_TEMP/.tmp" ]]; then
+      NPM_JS_PATH=`cat "$DEPLOYMENT_TEMP/__npmVersion.tmp"`
+      exitWithMessageOnError "getting npm version failed"
+    fi
+
+    if [[ ! -n "$NODE_EXE" ]]; then
+      NODE_EXE=node
+    fi
+
+    NPM_CMD="\"$NODE_EXE\" \"$NPM_JS_PATH\""
+  else
+    NPM_CMD=npm
+    NODE_EXE=node
+  fi
+}
+
 # Runs the specified install command if the specified config exists.
 install() {
-  if [ -e "$DEPLOYMENT_SOURCE/$2" ]; then
-    $1 install
-    exitWithMessageOnError "$1 install failed"
+  if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
+    eval $NPM_CMD install grunt-cli
+    exitWithMessageOnError "npm install failed"
   fi
 }
 
@@ -54,8 +82,8 @@ sync() {
 
 # MAIN ENTRY POINT
 notifySlack "Stache build started."
-install npm package.json
-install bower bower.json
+selectNodeVersion
+install
 build
 sync
 notifySlack "Stache build successfully completed."
