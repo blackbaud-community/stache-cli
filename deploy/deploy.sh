@@ -23,47 +23,6 @@ notifySlack() {
 }
 
 # Necessary in the Azure Environment
-setup () {
-  SCRIPT_DIR="${BASH_SOURCE[0]%\\*}"
-  SCRIPT_DIR="${SCRIPT_DIR%/*}"
-  ARTIFACTS=$SCRIPT_DIR/../artifacts
-  KUDU_SYNC_CMD=${KUDU_SYNC_CMD//\"}
-
-  if [[ ! -n "$DEPLOYMENT_SOURCE" ]]; then
-    DEPLOYMENT_SOURCE=$SCRIPT_DIR
-  fi
-
-  if [[ ! -n "$NEXT_MANIFEST_PATH" ]]; then
-    NEXT_MANIFEST_PATH=$ARTIFACTS/manifest
-
-    if [[ ! -n "$PREVIOUS_MANIFEST_PATH" ]]; then
-      PREVIOUS_MANIFEST_PATH=$NEXT_MANIFEST_PATH
-    fi
-  fi
-
-  if [[ ! -n "$DEPLOYMENT_TARGET" ]]; then
-    DEPLOYMENT_TARGET=$ARTIFACTS/wwwroot
-  else
-    KUDU_SERVICE=true
-  fi
-
-  if [[ ! -n "$KUDU_SYNC_CMD" ]]; then
-    # Install kudu sync
-    echo Installing Kudu Sync
-    npm install kudusync -g --silent
-    exitWithMessageOnError "npm failed"
-
-    if [[ ! -n "$KUDU_SERVICE" ]]; then
-      # In case we are running locally this is the correct location of kuduSync
-      KUDU_SYNC_CMD=kuduSync
-    else
-      # In case we are running on kudu service this is the correct location of kuduSync
-      KUDU_SYNC_CMD=$APPDATA/npm/node_modules/kuduSync/bin/kuduSync
-    fi
-  fi
-}
-
-# Necessary in the Azure Environment
 selectNodeVersion () {
   if [[ -n "$KUDU_SELECT_NODE_VERSION_CMD" ]]; then
     SELECT_NODE_VERSION="$KUDU_SELECT_NODE_VERSION_CMD \"$DEPLOYMENT_SOURCE\" \"$DEPLOYMENT_TARGET\" \"$DEPLOYMENT_TEMP\""
@@ -94,7 +53,6 @@ selectNodeVersion () {
 # Runs the specified install command if the specified config exists.
 install() {
   if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
-    eval $NPM_CMD install grunt-cli
     eval $NPM_CMD install
     exitWithMessageOnError "npm install failed"
   fi
@@ -111,7 +69,7 @@ build() {
         *) DEPLOY_FLAGS="";;
     esac
 
-    grunt build $DEPLOY_FLAGS
+    ./node_modules/.bin/grunt build --no-color $DEPLOY_FLAGS
     exitWithMessageOnError "stache build failed"
   fi
 }
@@ -124,7 +82,6 @@ sync() {
 
 # MAIN ENTRY POINT
 notifySlack "Stache build started."
-setup
 selectNodeVersion
 install
 build
