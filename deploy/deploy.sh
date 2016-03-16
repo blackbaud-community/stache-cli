@@ -54,6 +54,7 @@ selectNodeVersion () {
 install() {
   if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
     eval $NPM_CMD install grunt-cli
+    eval $NPM_CMD install
     exitWithMessageOnError "npm install failed"
   fi
 }
