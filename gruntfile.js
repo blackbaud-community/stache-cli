@@ -34,7 +34,10 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'deploy',
         'Deploys the current project',
-        'shell:deploy'
+        [
+            'cliversion',
+            'shell:deploy'
+        ]
     );
 
     grunt.registerTask(
