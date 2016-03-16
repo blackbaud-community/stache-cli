@@ -23,7 +23,7 @@ function getBase(args, cli, cwd) {
             'deploy'
         ];
     if (args && args.length > 2) {
-        task.forEach(function (task) {
+        tasks.forEach(function (task) {
             if (task === process.argv[2]) {
                 isCLI = true;
             }
