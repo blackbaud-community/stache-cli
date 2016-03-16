@@ -69,7 +69,7 @@ build() {
         *) DEPLOY_FLAGS="";;
     esac
 
-    ./node_modules/.bin/grunt build $DEPLOY_FLAGS
+    ./node_modules/.bin/grunt build --no-color $DEPLOY_FLAGS
     exitWithMessageOnError "stache build failed"
   fi
 }
