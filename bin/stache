@@ -36,7 +36,6 @@ function getBase(args, cli, cwd) {
 function getRun(args, base, cli, cwd) {
     var commands = [],
         flags = [
-            '--color',
             '--cli=' + cli,
             '--cwd=' + cwd,
             '--gruntfile=' + base + 'gruntfile.js',
@@ -51,6 +50,11 @@ function getRun(args, base, cli, cwd) {
             commands.push(item);
         }
     });
+
+    // Color or no color, that is the question
+    if (flags.indexOf('--no-color') === -1) {
+      flags.push('--color');
+    }
 
     return [
         'grunt',
