@@ -1,0 +1,62 @@
+#!/bin/bash
+
+# Stache Deployment Script
+# Originally based on KUDU Deployment Script v0.1.11
+# Ultimately, we removed some conditions that would never be true for us.
+
+# Catches errors
+exitWithMessageOnError () {
+  if [ ! $? -eq 0 ]; then
+    echo "An error has occurred during web site deployment."
+    echo $1
+    notifySlack "Stache build error: $1"
+    exit 1
+  fi
+}
+
+# If specified, notifies the Slack API
+notifySlack() {
+  echo $1
+  if [[ -n $SLACK_WEBHOOK ]]; then
+    curl -X POST --data-urlencode 'payload={"text":"['"$WEBSITE_SITE_NAME"'] '"$1"'"}' $SLACK_WEBHOOK
+  fi
+}
+
+# Runs the specified install command if the specified config exists.
+install() {
+  if [ -e "$DEPLOYMENT_SOURCE/$2" ]; then
+    $1 install
+    exitWithMessageOnError "$1 install failed"
+  fi
+}
+
+# Runs the stache build command
+# Supports deployment modes
+build() {
+  if [ -e "$DEPLOYMENT_SOURCE/Gruntfile.js" ]; then
+
+    DEPLOY_MODE_UCASE="$(echo $DEPLOY_MODE | tr '[:lower:]' '[:upper:]')"
+    case $DEPLOY_MODE_UCASE in
+        "PROD") DEPLOY_FLAGS="--config=stache.yml,stache.prod.yml";;
+        *) DEPLOY_FLAGS="";;
+    esac
+
+    grunt build $DEPLOY_FLAGS
+    exitWithMessageOnError "stache build failed"
+  fi
+}
+
+# Syncs the stache build output to the deployment target
+sync() {
+  "$KUDU_SYNC_CMD" -v 500 -f "$DEPLOYMENT_SOURCE/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  exitWithMessageOnError "Kudu Sync to Target failed"
+}
+
+# MAIN ENTRY POINT
+notifySlack "Stache build started."
+install npm package.json
+install bower bower.json
+build
+sync
+notifySlack "Stache build successfully completed."
+# MAIN ENTRY POINT

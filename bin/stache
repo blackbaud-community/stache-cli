@@ -1,57 +1,89 @@
 #!/usr/bin/env node
 
 /**
-* Why such a small file?  In almost all cases, this is simply a shim for grunt.
-* We kept grunt in order to better support TFS / Visual Studio development (surprising right?)
+* This allows the same "stache" command to be run globally or locally.
+* Tasks that should be handled globally can be added to the tasks array.
 **/
 
 'use strict';
+var args,
+    base,
+    cli,
+    command,
+    cwd,
+    fs,
+    path,
+    shell;
 
-// Libraries
-var fs = require('fs');
-var path = require('path');
-var shell = require('child_process').exec;
-var cli = path.normalize(__dirname + '/../');
-var cwd = path.normalize(process.cwd() + '/');
-
-var gruntconfig = 'gruntfile.js';
-var isPrepare = process.argv.length > 2 && process.argv[2] === 'prepare';
-var isVersion = process.argv.length > 2 && process.argv[2] === 'cliversion';
-var isLocal = fs.existsSync(cwd + gruntconfig);
-var gruntfile = ((!isPrepare && isLocal && !isVersion) ? cwd : cli) + gruntconfig;
-var options = {
-  cwd : cwd,
-  maxBuffer: 1048576
-};
-var commands = [];
-var flags = [
-  '--color',
-  '--cli=' + cli,
-  '--cwd=' + cwd,
-  '--gruntfile=' + gruntfile,
-  '--base=' + ((!isPrepare && isLocal && !isVersion) ? cwd : cli)
-];
-
-// Split command line options into grunt commands vs flags, ignores first two as they're node paths
-process.argv.slice(2).forEach(function(item) {
-  if (item.indexOf('--') === 0) {
-    flags.push(item);
-  } else {
-    commands.push(item);
-  }
-});
+// Determine whether our base is cli or cwd
+function getBase(args, cli, cwd) {
+    var isCLI = false,
+        tasks = [
+            'cliversion',
+            'deploy'
+        ];
+    if (args && args.length > 2) {
+        task.forEach(function (task) {
+            if (task === process.argv[2]) {
+                isCLI = true;
+            }
+        });
+    }
+    return isCLI ? cli : cwd;
+}
 
 // Build the shell command we're going to run
-var run = [
-  'grunt',
-  commands.join(':'),
-  flags.join(' ')
-];
+function getRun(args, base, cli, cwd) {
+    var commands = [],
+        flags = [
+            '--color',
+            '--cli=' + cli,
+            '--cwd=' + cwd,
+            '--gruntfile=' + base + 'gruntfile.js',
+            '--base=' + base
+        ];
+
+    // Split command line options into grunt commands vs flags, ignores first two as they're node paths
+    args.slice(2).forEach(function(item) {
+        if (item.indexOf('--') === 0) {
+            flags.push(item);
+        } else {
+            commands.push(item);
+        }
+    });
+
+    return [
+        'grunt',
+        commands.join(':'),
+        flags.join(' ')
+    ].join(' ');
+}
+
+fs = require('fs');
+path = require('path');
+shell = require('child_process').exec;
+args = process.argv;
+cli = path.normalize(__dirname + '/../');
+cwd = path.normalize(process.cwd() + '/');
+base = getBase(args, cli, cwd);
 
 // Execute shell command
-var grunt = shell(run.join(' '), options);
+command = shell(getRun(args, base, cli, cwd), {
+    cwd : cwd,
+    maxBuffer: 1048576
+});
 
-// Event Listening
-grunt.stdout.on('data', function(d) { process.stdout.write(d); });
-grunt.stderr.on('data', function(d) { process.stderr.write(d); });
-grunt.on('error', function(e) { console.log(e) });
+// Listen to normal output
+command.stdout.on('data', function(d) {
+    process.stdout.write(d);
+});
+
+// Listen to error output
+command.stderr.on('data', function(d) {
+    process.stderr.write(d);
+});
+
+// Listen for fatal error
+command.on('error', function(e) {
+    console.log(e);
+});
