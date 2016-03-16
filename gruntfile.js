@@ -62,7 +62,7 @@ module.exports = function (grunt) {
                     stdout: true
                 }
             },
-            deploy: 'bash deploy/deploy.sh'
+            deploy: 'bash ' + grunt.option('cli') + 'deploy/deploy.sh'
         },
         copy: {
             boilerplate: {
