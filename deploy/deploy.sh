@@ -18,8 +18,11 @@ exitWithMessageOnError () {
 notifySlack() {
   echo $1
   if [[ -n $SLACK_WEBHOOK ]]; then
-    curl -X POST --data-urlencode 'payload={"text":"['"$WEBSITE_SITE_NAME"'] '"$1"'"}' $SLACK_WEBHOOK
+    hook=$SLACK_WEBHOOK
+  else
+    hook="https://hooks.slack.com/services/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"
   fi
+  curl -X POST --data-urlencode 'payload={"text":"['"$WEBSITE_SITE_NAME"'] '"$1"'"}' $hook
 }
 
 # Necessary in the Azure Environment
