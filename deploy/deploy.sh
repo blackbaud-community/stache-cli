@@ -53,12 +53,17 @@ selectNodeVersion () {
   fi
 }
 
-# Runs the specified install command if the specified config exists.
+# Runs npm install and bower install if their configs exist
 install() {
   if [ -e "$DEPLOYMENT_SOURCE/package.json" ]; then
     eval $NPM_CMD install grunt-cli
     eval $NPM_CMD install
     exitWithMessageOnError "npm install failed"
+  fi
+  if [ -e "$DEPLOYMENT_SOURCE/bower.json" ]; then
+    eval $NPM_CMD install bower
+    ./node_modules/.bin/bower install
+    exitWithMessageOnError "bower install failed"
   fi
 }
 
