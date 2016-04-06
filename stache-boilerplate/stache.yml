@@ -16,7 +16,7 @@ files:
   js:
     #- /assets/js/custom.js
 
-stache_docs: http://blackbaud-stache.azurewebsites.net/
+stache_docs: http://stache.docs.blackbaudhosting.com/
 stache_docs_docs: <%= stache.config.stache_docs %>docs/
 stache_docs_navpatterns: <%= stache.config.stache_docs %>patterns/
 stache_docs_tutorials: <%= stache.config.stache_docs %>tutorials/
