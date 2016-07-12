@@ -20,7 +20,7 @@ notifySlack() {
   if [[ -n $SLACK_WEBHOOK ]]; then
     hook=$SLACK_WEBHOOK
   else
-    hook="https://hooks.slack.com/services/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"
+    hook="https://hooks.slack.com/services/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"
   fi
   curl -X POST --data-urlencode 'payload={"text":"['"$WEBSITE_SITE_NAME"'] '"$1"'"}' $hook
 }
