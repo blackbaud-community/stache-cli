@@ -27,7 +27,7 @@ module.exports = function (grunt) {
     // Register our tasks
     grunt.registerTask(
         'cliversion',
-        'Display the current installed cli version.',
+        'Displays the current installed cli version',
         taskCliVersion
     );
 
@@ -37,6 +37,15 @@ module.exports = function (grunt) {
         [
             'cliversion',
             'shell:deploy'
+        ]
+    );
+
+    grunt.registerTask(
+        'copyBuild',
+        'Copies the results of a Travis-CI build to the deploy branch',
+        [
+            'cliversion',
+            'shell:copyBuild'
         ]
     );
 
@@ -65,7 +74,8 @@ module.exports = function (grunt) {
                     stdout: true
                 }
             },
-            deploy: 'bash ' + grunt.option('cli') + 'deploy/deploy.sh'
+            copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
+            deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
         },
         copy: {
             boilerplate: {

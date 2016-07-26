@@ -1,0 +1,17 @@
+language: node_js
+
+before_script:
+  - npm install -g grunt-cli blackbaud-stache-cli
+
+script:
+  - grunt build --config=stache.yml,stache.prod.yml
+
+after_success:
+  - stache copyBuild
+
+env:
+  - STACHE_DEPLOY_BRANCH=deploy
+
+cache:
+  directories:
+    - node_modules

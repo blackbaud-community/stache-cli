@@ -92,8 +92,12 @@ sync() {
 # MAIN ENTRY POINT
 notifySlack "Stache build started."
 selectNodeVersion
-install
-build
+
+# Only run install and build if Travis-CI hasn't done it already.
+if [ ! -e "$DEPLOYMENT_SOURCE/.travis.yml" ]; then
+  install
+  build
+fi
+
 sync
 notifySlack "Stache build successfully completed."
-# MAIN ENTRY POINT
