@@ -3,8 +3,9 @@
 # Fail the build if this step fails
 set -e
 
-echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}";
+echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
 echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+
 
 if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; then
     echo "Commit and push to feature-test..."
@@ -12,6 +13,7 @@ if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; th
     git config --global user.email "stache-build-user@blackbaud.com"
     git config --global user.name "Blackbaud Stache Build User"
 
+    git status
     git stash
     git rm -rf build
     git stash pop
