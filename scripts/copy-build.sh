@@ -17,6 +17,8 @@ if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; th
     git status
     git stash
 
+    git checkout feature-test
+
     if test -d build; then
         git rm -rf build
     fi
