@@ -13,9 +13,14 @@ if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; th
     git config --global user.email "stache-build-user@blackbaud.com"
     git config --global user.name "Blackbaud Stache Build User"
 
+    git add --all
     git status
     git stash
-    git rm -rf build
+
+    if test -d build; then
+        git rm -rf build
+    fi
+
     git stash pop
     git add --all
     git status
