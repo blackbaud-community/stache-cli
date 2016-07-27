@@ -3,6 +3,9 @@
 # Fail the build if this step fails
 set -e
 
+echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}";
+echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+
 if [[ $TRAVIS_BRANCH == 'master' ]]; then
 
     if [[ $TRAVIS_EVENT_TYPE == 'push' ]]; then
