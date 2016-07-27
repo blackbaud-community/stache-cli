@@ -19,6 +19,7 @@ if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; th
     rm -rf build
     git stash pop
     git add --all
+    git status
 
     if ! git diff-index --quiet HEAD --; then
         git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
