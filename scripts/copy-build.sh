@@ -14,18 +14,6 @@ if [[ $TRAVIS_BRANCH == 'develop' && $TRAVIS_EVENT_TYPE == 'pull_request' ]]; th
     git config --global user.name "Blackbaud Stache Build User"
 
     git add --all
-    git status
-    git stash
-
-    git checkout feature-test
-
-    if test -d build; then
-        git rm -rf build
-    fi
-
-    git stash pop
-    git add --all
-    git status
 
     if ! git diff-index --quiet HEAD --; then
         git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
