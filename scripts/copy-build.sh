@@ -25,12 +25,14 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "TRAVIS_TAG: ${TRAVIS_TAG}"
 echo "IS_RELEASE: ${IS_RELEASE}"
 
-if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
-    # push to DEPLOY_TEST_BRANCH
-    echo "push to deploy test branch."
-    if [[ "$IS_RELEASE" == "true" ]]; then
-        # push to DEPLOY_PROD_BRANCH
-        echo "push to deploy prod branch"
+if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+    if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+        # push to DEPLOY_TEST_BRANCH
+        echo "push to deploy test branch."
+        if [[ "$IS_RELEASE" == "true" ]]; then
+            # push to DEPLOY_PROD_BRANCH
+            echo "push to deploy prod branch"
+        fi
     fi
 fi
 
