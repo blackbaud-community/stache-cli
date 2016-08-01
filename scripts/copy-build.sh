@@ -27,7 +27,7 @@ echo "IS_RELEASE: ${IS_RELEASE}"
 
 if [[ $TRAVIS_EVENT_TYPE == 'push' ]]; then
     # push to $DEPLOY_TEST_BRANCH
-    if [[ $IS_RELEASE ]]; then
+    if [[ $IS_RELEASE == 'true' ]]; then
         # push to $DEPLOY_PROD_BRANCH
     fi
 fi
