@@ -74,7 +74,8 @@ module.exports = function (grunt) {
         'Create a new release branch and commit to upstream.',
         function (type) {
             type = type || 'patch';
-            exec('grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type, {
+            console.log('Executing... `grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type + '`');
+            exec('git status && grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type, {
                 cwd: path.resolve()
             });
         }
