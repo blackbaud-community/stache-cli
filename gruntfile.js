@@ -74,8 +74,7 @@ module.exports = function (grunt) {
         'Create a new release branch and commit to upstream.',
         function (type) {
             type = type || 'patch';
-            console.log('Executing... `grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type + '`');
-            exec('git status && grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type, {
+            exec('grunt --base ' + grunt.option('cwd') + ' bump:' + type, {
                 cwd: path.resolve()
             });
         }
@@ -110,8 +109,7 @@ module.exports = function (grunt) {
                 }
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
-            deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
-            bump: 'grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump',
+            deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
         },
         copy: {
             boilerplate: {
