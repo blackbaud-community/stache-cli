@@ -4,6 +4,7 @@
 set -e
 
 IS_RELEASE=false
+echo "TRAVIS_COMMIT: ${TRAVIS_COMMIT}"
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
 # Regex matches 'Release vX.X.X' format
