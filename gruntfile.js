@@ -72,8 +72,8 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'release',
         'Create a new release branch and commit to upstream.',
-        function (a, b, c) {
-            console.log(a, b, c);
+        function (type) {
+            exec('grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type || 'patch');
         }
     );
 
