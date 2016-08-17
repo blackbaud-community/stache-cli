@@ -106,7 +106,7 @@ module.exports = function (grunt) {
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
             deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
-            release: 'echo "Hello, World!" && grunt --gruntfile ' + path.resolve() + 'gruntfile.js bump',
+            release: 'echo "Hello, World!" && grunt --gruntfile ' + path.resolve() + '/gruntfile.js bump',
         },
         copy: {
             boilerplate: {
