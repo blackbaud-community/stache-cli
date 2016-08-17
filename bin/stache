@@ -19,6 +19,7 @@ var args,
 function getBase(args, cli, cwd) {
     var isCLI = false,
         tasks = [
+            'bump',
             'cliversion',
             'copyBuild',
             'deploy',
