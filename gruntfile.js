@@ -2,6 +2,7 @@ module.exports = function (grunt) {
     'use strict';
 
     var path = require('path');
+    var exec = require('child_process').execSync;
 
     function taskCliVersion() {
         grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
@@ -71,9 +72,9 @@ module.exports = function (grunt) {
     grunt.registerTask(
         'release',
         'Create a new release branch and commit to upstream.',
-        [
-            'shell:release'
-        ]
+        function (a, b, c) {
+            console.log(a, b, c);
+        }
     );
 
     // Configure necessary modules
@@ -106,7 +107,7 @@ module.exports = function (grunt) {
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
             deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
-            release: 'echo "Hello, World!" && grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump',
+            bump: 'grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump',
         },
         copy: {
             boilerplate: {
