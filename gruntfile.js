@@ -1,6 +1,8 @@
 module.exports = function (grunt) {
     'use strict';
 
+    var path = require('path');
+
     function taskCliVersion() {
         grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
     }
@@ -104,7 +106,7 @@ module.exports = function (grunt) {
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
             deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
-            release: 'echo "Hello, World!" && grunt bump',
+            release: 'echo "Hello, World!" && grunt --gruntfile ' + path.resolve() + 'gruntfile.js bump',
         },
         copy: {
             boilerplate: {
