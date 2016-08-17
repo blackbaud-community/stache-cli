@@ -70,8 +70,7 @@ module.exports = function (grunt) {
         'release',
         'Create a new release branch and commit to upstream.',
         [
-            'shell:release',
-            'bump'
+            'shell:release'
         ]
     );
 
@@ -105,7 +104,7 @@ module.exports = function (grunt) {
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
             deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
-            release: 'echo "Hello, World!"',
+            release: 'echo "Hello, World!" && grunt bump',
         },
         copy: {
             boilerplate: {
