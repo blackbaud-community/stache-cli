@@ -74,9 +74,9 @@ module.exports = function (grunt) {
         'Create a new release branch and commit to upstream.',
         function (type) {
             type = type || 'patch';
-            console.log(type);
             exec('grunt --base ' + grunt.option('cwd') + ' bump:' + type, {
-                cwd: path.resolve()
+                cwd: path.resolve(),
+                stdio: 'inherit'
             });
         }
     );
