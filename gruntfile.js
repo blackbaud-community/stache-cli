@@ -73,7 +73,10 @@ module.exports = function (grunt) {
         'release',
         'Create a new release branch and commit to upstream.',
         function (type) {
-            exec('grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type || 'patch');
+            type = type || 'patch';
+            exec('grunt --gruntfile ' + path.resolve() + '/gruntfile.js --base ' + grunt.option('cwd') + ' bump:' + type, {
+                cwd: path.resolve()
+            });
         }
     );
 
