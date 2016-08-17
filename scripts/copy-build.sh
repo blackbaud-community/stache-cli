@@ -32,11 +32,14 @@ echo "IS_RELEASE: ${IS_RELEASE}"
 # Push commits to deploy branches.
 if [[ "$TRAVIS_BRANCH" == "master" ]]; then
   if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+
     # push to DEPLOY_TEST_BRANCH
-    echo "push to deploy test branch ${stache.DEPLOY_TEST_BRANCH}"
+    echo "push to deploy test branch ${STACHE_DEPLOY_TEST_BRANCH}"
+
     if [[ "$IS_RELEASE" == "true" ]]; then
+
       # push to DEPLOY_PROD_BRANCH
-      echo "push to deploy prod branch ${stache.DEPLOY_PROD_BRANCH}"
+      echo "push to deploy prod branch ${STACHE_DEPLOY_PROD_BRANCH}"
     fi
   fi
 fi
