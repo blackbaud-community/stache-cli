@@ -70,7 +70,8 @@ module.exports = function (grunt) {
         'release',
         'Create a new release branch and commit to upstream.',
         [
-            'shell:release'
+            'shell:release',
+            'bump'
         ]
     );
 
