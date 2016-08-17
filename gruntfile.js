@@ -66,6 +66,14 @@ module.exports = function (grunt) {
         taskNew
     );
 
+    grunt.registerTask(
+        'release',
+        'Create a new release branch and commit to upstream.',
+        [
+            'shell:release'
+        ]
+    );
+
     // Configure necessary modules
     grunt.config.init({
         bump: {
@@ -95,7 +103,8 @@ module.exports = function (grunt) {
                 }
             },
             copyBuild: 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
-            deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
+            deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
+            release: 'echo "Hello, World!"',
         },
         copy: {
             boilerplate: {
