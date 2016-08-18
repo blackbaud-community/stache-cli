@@ -16,16 +16,15 @@ REGEX_RELEASE_BRANCH="^(master|rc-|release)"
 if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
   # Is the current branch a release-able branch?
-  if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+  #if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
 
     # Does the commit message match the appropriate pattern?
     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
-
       if [[ ! -z $TRAVIS_TAG ]]; then
         IS_RELEASE=true;
       fi
     fi
-  fi
+  #fi
 fi
 
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
