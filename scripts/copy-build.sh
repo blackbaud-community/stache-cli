@@ -41,7 +41,7 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     # push to STACHE_DEPLOY_TEST_BRANCH
     git add --all
     git stash
-    git checkout $STACHE_DEPLOY_TEST_BRANCH || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
+    git checkout -b $STACHE_DEPLOY_TEST_BRANCH
     rm -rf build
     git stash apply
     git add --all
@@ -54,11 +54,10 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
 
       # Push to STACHE_DEPLOY_PROD_BRANCH
       if [[ "$IS_RELEASE" == "true" ]]; then
-          echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-          git checkout $STACHE_DEPLOY_PROD_BRANCH || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-          git merge $STACHE_DEPLOY_TEST_BRANCH
-          git push origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH --force
-        fi
+        echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
+        git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+        git merge $STACHE_DEPLOY_TEST_BRANCH
+        git push origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH --force
       fi
     fi
   fi
