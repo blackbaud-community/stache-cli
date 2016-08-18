@@ -37,23 +37,32 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     git config --global user.email "stache-build-user@blackbaud.com"
     git config --global user.name "Blackbaud Stache Build User"
 
-    # push to DEPLOY_TEST_BRANCH
-    echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
+    # push to STACHE_DEPLOY_TEST_BRANCH
     git add --all
     git stash
     git checkout $STACHE_DEPLOY_TEST_BRANCH || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
     rm -rf build
-    git stash pop
+    git stash apply
     git add --all
     git status
 
     if ! git diff-index --quiet HEAD --; then
+      echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
       git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
       git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
 
+      # Push to STACHE_DEPLOY_PROD_BRANCH
       if [[ "$IS_RELEASE" == "true" ]]; then
-        echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-        git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+        git checkout $STACHE_DEPLOY_PROD_BRANCH || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+        rm -rf build
+        git stash pop
+        git add --all
+        git status
+        if ! git diff-index --quiet HEAD --; then
+          echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
+          git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+          git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+        fi
       fi
     fi
   fi
