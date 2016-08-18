@@ -54,15 +54,8 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
 
       # Push to STACHE_DEPLOY_PROD_BRANCH
       if [[ "$IS_RELEASE" == "true" ]]; then
-        git checkout $STACHE_DEPLOY_PROD_BRANCH || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-        rm -rf build
-        git stash pop
-        git add --all
-        git status
-        if ! git diff-index --quiet HEAD --; then
           echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-          git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-          git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+          git push --force origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH
         fi
       fi
     fi
