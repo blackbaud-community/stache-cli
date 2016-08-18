@@ -32,8 +32,8 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "TRAVIS_TAG: ${TRAVIS_TAG}"
 echo "IS_RELEASE: ${IS_RELEASE}"
 
-# Push commits to deploy branches.
-if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+# Push commits to deploy branches if we're on the master branch, or if it's a release.
+if [ "$TRAVIS_BRANCH" == "master" ] || [ "$IS_RELEASE" == "true" ]; then
   if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
     git config --global user.email "stache-build-user@blackbaud.com"
