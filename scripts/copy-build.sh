@@ -16,24 +16,23 @@ REGEX_RELEASE_BRANCH="^(master|rc-|release)"
 if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
   # Is the current branch a release-able branch?
-  #if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+  if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
 
     # Does the commit message match the appropriate pattern?
     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
-      if [[ ! -z $TRAVIS_TAG ]]; then
-        IS_RELEASE=true;
-      fi
+      #if [[ ! -z $TRAVIS_TAG ]]; then
+      IS_RELEASE=true;
+      #fi
     fi
-  #fi
+  fi
 fi
 
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
 echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-echo "TRAVIS_TAG: ${TRAVIS_TAG}"
 echo "IS_RELEASE: ${IS_RELEASE}"
 
 # Push commits to deploy branches if we're on the master branch, or if it's a release.
-if [ "$TRAVIS_BRANCH" == "master" ] || [ "$IS_RELEASE" == "true" ]; then
+if [[ "$TRAVIS_BRANCH" == "master" ]]; then
   if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
     git config --global user.email "stache-build-user@blackbaud.com"
