@@ -21,7 +21,7 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
     # Does the commit message match the appropriate pattern?
     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
 
-      if [[ $TRAVIS_TAG ]]; then
+      if [[ ! -z $TRAVIS_TAG ]]; then
         IS_RELEASE=true;
       fi
     fi
