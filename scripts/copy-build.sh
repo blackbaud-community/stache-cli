@@ -57,9 +57,9 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
         echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
         git status
         git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-        git merge --force $STACHE_DEPLOY_TEST_BRANCH
+        git merge -fq $STACHE_DEPLOY_TEST_BRANCH
         git status
-        git push --force origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH 
+        git push -fq origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH 
       fi
     fi
   fi
