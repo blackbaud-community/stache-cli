@@ -52,24 +52,24 @@ module.exports = function (grunt) {
     'Copies the results of a Travis-CI build to the deploy branch',
     function () {
       var config,
-          envStr,
+          env,
           filePath,
           k;
 
       filePath = grunt.option('config');
-      envStr = '';
+      env = [];
 
       if (filePath) {
         config = grunt.file.readYAML(filePath);
         for (k in config.env) {
           if (config.env.hasOwnProperty(k)) {
-            envStr += k + '=' + config.env[k];
+            env.push(k + '=' + config.env[k]);
           }
         }
-        envStr += ' ';
+        env = env.join(' ') + ' ';
       }
 
-      grunt.task.run('shell:copyBuild:' + envStr);
+      grunt.task.run('shell:copyBuild:' + env);
     }
   );
 
@@ -140,6 +140,7 @@ module.exports = function (grunt) {
       },
       copyBuild: {
         command: function (env) {
+          console.log("ENV vars: ", env);
           return env + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh';
         }
       },
