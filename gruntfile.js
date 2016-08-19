@@ -29,6 +29,7 @@ module.exports = function (grunt) {
   // Load necessary modules
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-bump');
+  //grunt.loadNpmTasks('grun-shell');
 
   // Register our tasks
   grunt.registerTask(
@@ -64,6 +65,7 @@ module.exports = function (grunt) {
         envStr += ' ';
       }
       console.log("ENV: ", envStr);
+      exec('echo "Hello, World!"');
       exec(envStr + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
         cwd: path.resolve(),
         stdio: 'inherit'
@@ -128,6 +130,15 @@ module.exports = function (grunt) {
           }
         ]
       }
+    },
+    shell: {
+      options: {
+        execOptions: {
+          cwd: grunt.option('cwd'),
+          stdout: true
+        }
+      },
+      deploy: 'bash ' + grunt.option('cli') + 'deploy/deploy.sh'
     }
   });
 };
