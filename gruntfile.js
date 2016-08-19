@@ -57,19 +57,22 @@ module.exports = function (grunt) {
           k;
 
       filePath = grunt.option('config');
+      config = grunt.file.readYAML('stache.deploy.yml');
       env = [];
 
-      if (filePath) {
-        config = grunt.file.readYAML(filePath);
-        console.log("CONFIG:", config);
-        for (k in config.env) {
-          if (config.env.hasOwnProperty(k)) {
-            env.push(k + '=' + config.env[k]);
-          }
-        }
-        env = env.join(' ') + ' ';
+      if (filePath && grunt.file.exists(file)) {
+        config = merge.recursive(true, config, grunt.file.readYAML(file));
       }
 
+      console.log("CONFIG:", config);
+      
+      for (k in config.env) {
+        if (config.env.hasOwnProperty(k)) {
+          env.push(k + '=' + config.env[k]);
+        }
+      }
+
+      env = env.join(' ') + ' ';
       grunt.task.run('shell:copyBuild:' + env);
     }
   );

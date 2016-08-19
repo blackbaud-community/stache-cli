@@ -1,0 +1,5 @@
+build: deploy/
+env:
+  STACHE_DEPLOY_TEST_BRANCH: deploy-test
+  STACHE_DEPLOY_PROD_BRANCH: deploy-prod
+  STACHE_DEPLOY_DIR: deploy
