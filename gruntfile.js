@@ -61,6 +61,7 @@ module.exports = function (grunt) {
 
       if (filePath) {
         config = grunt.file.readYAML(filePath);
+        console.log("CONFIG:", config);
         for (k in config.env) {
           if (config.env.hasOwnProperty(k)) {
             env.push(k + '=' + config.env[k]);
