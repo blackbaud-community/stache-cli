@@ -40,7 +40,7 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'deploy',
     'Deploys the current project',
-    function (arg) {
+    function () {
       exec('bash ' + grunt.option('cli') + 'scripts/deploy.sh', {
         cwd: path.resolve(),
         stdio: 'inherit'
@@ -51,9 +51,14 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'copyBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
-    function (arg) {
-      console.log(arg, JSON.stringify(this));
-      exec('bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
+    function () {
+      var config = grunt.file.readYAML(grunt.option('config'));
+      var envStr = '';
+      for (var k in config.env) {
+        envStr += k + '=' config.env[k];
+      }
+      console.log("ENV: ", envStr);
+      exec(envStr + ' bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
         cwd: path.resolve(),
         stdio: 'inherit'
       });

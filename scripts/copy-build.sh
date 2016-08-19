@@ -3,6 +3,8 @@
 # Fail the build if this step fails
 set -e
 
+echo "CUSTOM VAR: ${MY_CUSTOM_VAR}";
+
 IS_RELEASE=false
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
