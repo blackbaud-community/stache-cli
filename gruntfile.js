@@ -65,6 +65,7 @@ module.exports = function (grunt) {
         envStr += ' ';
       }
       console.log("ENV: ", envStr);
+      console.log("Typeof:", typeof exec);
       exec('echo "Hello, World!"');
       exec(envStr + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
         cwd: path.resolve(),
