@@ -29,7 +29,7 @@ module.exports = function (grunt) {
   // Load necessary modules
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-bump');
-  grunt.loadNpmTasks('grun-shell');
+  grunt.loadNpmTasks('grunt-shell');
 
   // Register our tasks
   grunt.registerTask(
