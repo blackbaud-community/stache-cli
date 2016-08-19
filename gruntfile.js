@@ -52,7 +52,7 @@ module.exports = function (grunt) {
     'copyBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
     function (arg) {
-      console.log(arg, this);
+      console.log(arg, JSON.stringify(this));
       exec('bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
         cwd: path.resolve(),
         stdio: 'inherit'
