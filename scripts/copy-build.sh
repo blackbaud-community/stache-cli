@@ -35,31 +35,31 @@ echo "IS_RELEASE: ${IS_RELEASE}"
 if [[ "$TRAVIS_BRANCH" == "master" ]]; then
   if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
-    git config --global user.email "stache-build-user@blackbaud.com"
-    git config --global user.name "Blackbaud Stache Build User"
-
-    # push to STACHE_DEPLOY_TEST_BRANCH
-    git add --all
-    git stash
-    git checkout $STACHE_DEPLOY_TEST_BRANCH || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
-    rm -rf $STACHE_DEPLOY_DIR
-    git stash apply
-    git add --all
-    git status
+    # git config --global user.email "stache-build-user@blackbaud.com"
+    # git config --global user.name "Blackbaud Stache Build User"
+    #
+    # # push to STACHE_DEPLOY_TEST_BRANCH
+    # git add --all
+    # git stash
+    # git checkout $STACHE_DEPLOY_TEST_BRANCH || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
+    # rm -rf $STACHE_DEPLOY_DIR
+    # git stash apply
+    # git add --all
+    # git status
 
     if ! git diff-index --quiet HEAD --; then
       echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
-      git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-      git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
+      # git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+      # git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
 
       # Push to STACHE_DEPLOY_PROD_BRANCH
       if [[ "$IS_RELEASE" == "true" ]]; then
         echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-        git status
-        git checkout $STACHE_DEPLOY_PROD_BRANCH || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-        git merge $STACHE_DEPLOY_TEST_BRANCH --force
-        git status
-        git push origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH --force
+        # git status
+        # git checkout $STACHE_DEPLOY_PROD_BRANCH || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+        # git merge $STACHE_DEPLOY_TEST_BRANCH --force
+        # git status
+        # git push origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH --force
       fi
     fi
   fi
