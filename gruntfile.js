@@ -52,9 +52,10 @@ module.exports = function (grunt) {
     'copyBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
     function () {
+      var path = require('path');
       var cwd = process.cwd();
       console.log(cwd);
-      var config = grunt.file.readYAML(cwd + grunt.option('config'));
+      var config = grunt.file.readYAML(path + '/' + grunt.option('config'));
       var envStr = '';
       for (var k in config.env) {
         if (config.env.hasOwnProperty(k)) {
