@@ -69,8 +69,7 @@ module.exports = function (grunt) {
         envStr += ' ';
       }
 
-      grunt.option('envStr', envStr);
-      grunt.task.run('shell:copyBuild');
+      grunt.task.run('shell:copyBuild:' + envStr);
     }
   );
 
@@ -139,7 +138,11 @@ module.exports = function (grunt) {
           stdout: true
         }
       },
-      copyBuild: grunt.option('envStr') + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
+      copyBuild: {
+        command: function (env) {
+          return env + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh';
+        }
+      },
       deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
     }
   });
