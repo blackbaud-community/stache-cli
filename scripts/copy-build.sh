@@ -3,8 +3,6 @@
 # Fail the build if this step fails
 set -e
 
-echo "CUSTOM VAR: ${MY_CUSTOM_VAR}";
-
 IS_RELEASE=false
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
@@ -29,6 +27,7 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
   fi
 fi
 
+echo "MY_CUSTOM_VAR: ${MY_CUSTOM_VAR}"
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
 echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "IS_RELEASE: ${IS_RELEASE}"
