@@ -2,6 +2,7 @@ module.exports = function (grunt) {
 
   var path = require('path');
   var exec = require('child_process').execSync;
+  var merge = require('merge');
 
   function taskCliVersion() {
     grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
