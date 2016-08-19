@@ -1,8 +1,11 @@
 module.exports = function (grunt) {
+  var exec,
+      merge,
+      path;
 
-  var path = require('path');
-  var exec = require('child_process').execSync;
-  var merge = require('merge');
+  path = require('path');
+  exec = require('child_process').execSync;
+  merge = require('merge');
 
   function taskCliVersion() {
     grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
@@ -61,19 +64,19 @@ module.exports = function (grunt) {
       config = grunt.file.readYAML('stache.deploy.yml');
       env = [];
 
+      // Merge deployment config.
       if (filePath && grunt.file.exists(filePath)) {
         config = merge.recursive(true, config, grunt.file.readYAML(filePath));
       }
 
-      console.log("CONFIG:", config);
-
+      // Create a string of environment variables.
       for (k in config.env) {
         if (config.env.hasOwnProperty(k)) {
           env.push(k + '=' + config.env[k]);
         }
       }
-
       env = env.join(' ') + ' ';
+
       grunt.task.run('shell:copyBuild:' + env);
     }
   );
@@ -145,7 +148,6 @@ module.exports = function (grunt) {
       },
       copyBuild: {
         command: function (env) {
-          console.log("ENV vars: ", env);
           return env + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh';
         }
       },
