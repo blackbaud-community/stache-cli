@@ -60,12 +60,12 @@ module.exports = function (grunt) {
       config = grunt.file.readYAML('stache.deploy.yml');
       env = [];
 
-      if (filePath && grunt.file.exists(file)) {
-        config = merge.recursive(true, config, grunt.file.readYAML(file));
+      if (filePath && grunt.file.exists(filePath)) {
+        config = merge.recursive(true, config, grunt.file.readYAML(filePath));
       }
 
       console.log("CONFIG:", config);
-      
+
       for (k in config.env) {
         if (config.env.hasOwnProperty(k)) {
           env.push(k + '=' + config.env[k]);
