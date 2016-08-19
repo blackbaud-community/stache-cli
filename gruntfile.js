@@ -55,7 +55,9 @@ module.exports = function (grunt) {
       var config = grunt.file.readYAML(grunt.option('config'));
       var envStr = '';
       for (var k in config.env) {
-        envStr += k + '=' config.env[k];
+        if (config.env.hasOwnProperty(k)) {
+          envStr += k + '=' + config.env[k];
+        }
       }
       console.log("ENV: ", envStr);
       exec(envStr + ' bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
