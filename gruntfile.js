@@ -29,7 +29,7 @@ module.exports = function (grunt) {
   // Load necessary modules
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-bump');
-  //grunt.loadNpmTasks('grun-shell');
+  grunt.loadNpmTasks('grun-shell');
 
   // Register our tasks
   grunt.registerTask(
@@ -41,36 +41,36 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'deploy',
     'Deploys the current project',
-    function () {
-      exec('bash ' + grunt.option('cli') + 'scripts/deploy.sh', {
-        cwd: path.resolve(),
-        stdio: 'inherit'
-      });
-    }
+    [
+      'cliversion',
+      'shell:deploy'
+    ]
   );
 
   grunt.registerTask(
     'copyBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
     function () {
-      var filePath = grunt.option('config');
-      var envStr = '';
+      var config,
+          envStr,
+          filePath,
+          k;
+
+      filePath = grunt.option('config');
+      envStr = '';
+
       if (filePath) {
-        var config = grunt.file.readYAML(filePath);
-        for (var k in config.env) {
+        config = grunt.file.readYAML(filePath);
+        for (k in config.env) {
           if (config.env.hasOwnProperty(k)) {
             envStr += k + '=' + config.env[k];
           }
         }
         envStr += ' ';
       }
-      console.log("ENV: ", envStr);
-      console.log("Typeof:", typeof exec);
-      exec('echo "Hello, World!"');
-      exec(envStr + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh', {
-        cwd: path.resolve(),
-        stdio: 'inherit'
-      });
+
+      grunt.option('envStr', envStr);
+      grunt.task.run('shell:copyBuild');
     }
   );
 
@@ -139,7 +139,8 @@ module.exports = function (grunt) {
           stdout: true
         }
       },
-      deploy: 'bash ' + grunt.option('cli') + 'deploy/deploy.sh'
+      copyBuild: grunt.option('envStr') + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh',
+      deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
     }
   });
 };
