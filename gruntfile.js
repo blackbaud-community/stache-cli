@@ -54,8 +54,8 @@ module.exports = function (grunt) {
     function () {
       var path = require('path');
       var cwd = process.cwd();
-      console.log(cwd);
-      var config = grunt.file.readYAML(path + '/' + grunt.option('config'));
+      console.log(cwd, path.resolve());
+      var config = grunt.file.readYAML(path.resolve() + '/' + grunt.option('config'));
       var envStr = '';
       for (var k in config.env) {
         if (config.env.hasOwnProperty(k)) {
