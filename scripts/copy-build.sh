@@ -39,24 +39,23 @@ echo "IS_HOTFIX: ${IS_HOTFIX}"
 git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
 
-if [[ "$IS_HOTFIX" == "true" ]]; then
+# Push commits to deploy branches if we're on the master branch, or if it's a release.
+if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+    if [[ "$IS_HOTFIX" == "true" ]]; then
 
-  git add --all
-  git stash
-  git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-  rm -rf $STACHE_BUILD_DIRECTORY
-  git stash apply
-  git add --all
-  git status
-  git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-  git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
-  git status
+      git add --all
+      git stash
+      git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+      rm -rf $STACHE_BUILD_DIRECTORY
+      git stash apply
+      git add --all
+      git status
+      git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+      git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+      git status
 
-else
-
-  # Push commits to deploy branches if we're on the master branch, or if it's a release.
-  if [[ "$TRAVIS_BRANCH" == "master" ]]; then
-    if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+    else
 
       # push to STACHE_DEPLOY_TEST_BRANCH
       git add --all
