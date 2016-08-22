@@ -1,17 +1,18 @@
 language: node_js
 
 before_script:
-  - npm install -g grunt-cli blackbaud-stache-cli
+  - npm i -g grunt-cli blackbaud-stache-cli
 
 script:
-  - grunt build --config=stache.yml,stache.prod.yml
+  - stache build --config=stache.yml,stache.prod.yml,stache.deploy.yml
 
 after_success:
-  - stache copyBuild
-
-env:
-  - STACHE_DEPLOY_BRANCH=deploy
+  - stache copyBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
 
 cache:
   directories:
     - node_modules
+
+branches:
+  except:
+    - deploy

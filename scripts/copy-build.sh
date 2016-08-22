@@ -40,7 +40,7 @@ if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     git add --all
     git stash
     git checkout $STACHE_DEPLOY_TEST_BRANCH || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
-    rm -rf $STACHE_DEPLOY_DIR
+    rm -rf $STACHE_BUILD_DIRECTORY
     git stash apply
     git add --all
     git status

@@ -1,5 +1,5 @@
-build: deploy/
 env:
-  STACHE_DEPLOY_TEST_BRANCH: deploy-test
-  STACHE_DEPLOY_PROD_BRANCH: deploy-prod
-  STACHE_DEPLOY_DIR: deploy
+  STACHE_DEPLOY_TEST_BRANCH: deploy
+  STACHE_DEPLOY_PROD_BRANCH: deploy
+  STACHE_BUILD_DIRECTORY: deploy
+build: <%= stache.config.env.STACHE_BUILD_DIRECTORY %>/

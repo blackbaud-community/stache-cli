@@ -11,6 +11,32 @@ module.exports = function (grunt) {
     grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
   }
 
+  function taskCopyBuild() {
+    var config,
+        env,
+        filePath,
+        k;
+
+    filePath = grunt.option('config');
+    config = grunt.file.readYAML('stache.deploy.yml');
+    env = [];
+
+    // Merge deployment config.
+    if (filePath && grunt.file.exists(filePath)) {
+      config = merge.recursive(true, config, grunt.file.readYAML(filePath));
+    }
+
+    // Create a string of environment variables.
+    for (k in config.env) {
+      if (config.env.hasOwnProperty(k)) {
+        env.push(k + '=' + config.env[k]);
+      }
+    }
+    env = env.join(' ') + ' ';
+
+    grunt.task.run('shell:copyBuild:' + env);
+  }
+
   function taskFixIgnore() {
     var dir = grunt.config('boilerplateDest') + '/';
     grunt.file.copy(dir + '.npmignore', dir + '.gitignore');
@@ -28,6 +54,14 @@ module.exports = function (grunt) {
       grunt.task.run('copy:boilerplate');
       grunt.task.run('fixIgnore');
     }
+  }
+
+  function taskRelease(type) {
+    type = type || 'patch';
+    exec('grunt --base ' + grunt.option('cwd') + ' bump:' + type, {
+      cwd: path.resolve(),
+      stdio: 'inherit'
+    });
   }
 
   // Load necessary modules
@@ -54,31 +88,7 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'copyBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
-    function () {
-      var config,
-          env,
-          filePath,
-          k;
-
-      filePath = grunt.option('config');
-      config = grunt.file.readYAML('stache.deploy.yml');
-      env = [];
-
-      // Merge deployment config.
-      if (filePath && grunt.file.exists(filePath)) {
-        config = merge.recursive(true, config, grunt.file.readYAML(filePath));
-      }
-
-      // Create a string of environment variables.
-      for (k in config.env) {
-        if (config.env.hasOwnProperty(k)) {
-          env.push(k + '=' + config.env[k]);
-        }
-      }
-      env = env.join(' ') + ' ';
-
-      grunt.task.run('shell:copyBuild:' + env);
-    }
+    taskCopyBuild
   );
 
   grunt.registerTask(
@@ -96,13 +106,7 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'release',
     'Create a new release branch and commit to upstream.',
-    function (type) {
-      type = type || 'patch';
-      exec('grunt --base ' + grunt.option('cwd') + ' bump:' + type, {
-        cwd: path.resolve(),
-        stdio: 'inherit'
-      });
-    }
+    taskRelease
   );
 
   // Configure necessary modules
