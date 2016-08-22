@@ -12,7 +12,3 @@ after_success:
 cache:
   directories:
     - node_modules
-
-branches:
-  except:
-    - deploy
