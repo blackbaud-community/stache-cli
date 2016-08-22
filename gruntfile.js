@@ -12,6 +12,19 @@ module.exports = function (grunt) {
   }
 
   function taskCopyBuild() {
+    var env;
+    env = getConfigEnvironmentString();
+    grunt.task.run('shell:copyBuild:' + env);
+  }
+
+  function taskDeploy() {
+    var env;
+    env = getConfigEnvironmentString();
+    grunt.task.run('cliversion');
+    grunt.task.run('shell:deploy:' + env);
+  }
+
+  function getConfigEnvironmentString() {
     var config,
         env,
         filePath,
@@ -33,8 +46,7 @@ module.exports = function (grunt) {
       }
     }
     env = env.join(' ') + ' ';
-
-    grunt.task.run('shell:copyBuild:' + env);
+    return env;
   }
 
   function taskFixIgnore() {
@@ -79,10 +91,7 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'deploy',
     'Deploys the current project',
-    [
-      'cliversion',
-      'shell:deploy'
-    ]
+    taskDeploy
   );
 
   grunt.registerTask(
@@ -155,7 +164,11 @@ module.exports = function (grunt) {
           return env + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh';
         }
       },
-      deploy: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh'
+      deploy: {
+        command: function (env) {
+          return env + 'bash ' + grunt.option('cli') + 'scripts/deploy.sh';
+        }
+      }
     }
   });
 };
