@@ -27,13 +27,14 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
   fi
 fi
 
-if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+if [[ $TRAVIS_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
   IS_HOTFIX=true;
 fi
 
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
 echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "IS_RELEASE: ${IS_RELEASE}"
+echo "IS_HOTFIX: ${IS_HOTFIX}"
 
 git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
