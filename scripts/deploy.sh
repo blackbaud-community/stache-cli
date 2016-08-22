@@ -85,15 +85,24 @@ build() {
 
 # Syncs the stache build output to the deployment target
 sync() {
-  "$KUDU_SYNC_CMD" -v 500 -f "$DEPLOYMENT_SOURCE/build" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
+  "$KUDU_SYNC_CMD" -v 500 -f "$DEPLOYMENT_SOURCE/$STACHE_BUILD_DIRECTORY" -t "$DEPLOYMENT_TARGET" -n "$NEXT_MANIFEST_PATH" -p "$PREVIOUS_MANIFEST_PATH" -i ".git;.hg;.deployment;deploy.sh"
   exitWithMessageOnError "Kudu Sync to Target failed"
 }
+
+# Set the build directory
+if [[ ! -n "$STACHE_BUILD_DIRECTORY" ]]; then
+  STACHE_BUILD_DIRECTORY="build"
+fi
 
 # MAIN ENTRY POINT
 notifySlack "Stache build started."
 selectNodeVersion
-install
-build
+
+# Only run install and build if Travis-CI hasn't done it already.
+if [ ! -e "$DEPLOYMENT_SOURCE/.travis.yml" ]; then
+  install
+  build
+fi
+
 sync
 notifySlack "Stache build successfully completed."
-# MAIN ENTRY POINT

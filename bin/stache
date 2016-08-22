@@ -20,8 +20,10 @@ function getBase(args, cli, cwd) {
     var isCLI = false,
         tasks = [
             'cliversion',
+            'copyBuild',
             'deploy',
-            'new'
+            'new',
+            'release'
         ];
     if (args && args.length > 2) {
         tasks.forEach(function (task) {
