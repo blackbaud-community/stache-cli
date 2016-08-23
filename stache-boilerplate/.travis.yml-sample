@@ -4,7 +4,8 @@ before_script:
   - npm i -g grunt-cli blackbaud-stache-cli
 
 script:
-  - stache build --config=stache.yml,stache.prod.yml,stache.deploy.yml
+  - export STACHE_CLI=/home/travis/.nvm/$(node --version)/lib/node_modules/blackbaud-stache-cli
+  - stache build --config=stache.yml,stache.prod.yml,$STACHE_CLI/stache.deploy.yml,stache.deploy.yml
 
 after_success:
   - stache copyBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
