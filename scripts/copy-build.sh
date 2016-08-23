@@ -3,8 +3,16 @@
 # Fail the build if this step fails
 set -e
 
+echo "TRAVIS_PULL_REQUEST=${TRAVIS_PULL_REQUEST}";
+echo "TRAVIS_BRANCH=${TRAVIS_BRANCH}";
+echo "STACHE_DEVELOP_BRANCH=${STACHE_DEVELOP_BRANCH}";
+echo "STACHE_MASTER_BRANCH=${STACHE_MASTER_BRANCH}";
+echo "STACHE_DEPLOY_TEST_BRANCH=${STACHE_DEPLOY_TEST_BRANCH}";
+echo "STACHE_DEPLOY_PROD_BRANCH=${STACHE_DEPLOY_PROD_BRANCH}";
+
 # No need to commit the build during a pull request.
 if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then
+  echo "Deployment halted. Exiting script.";
   exit 0
 fi
 
