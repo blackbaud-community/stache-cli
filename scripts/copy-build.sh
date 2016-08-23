@@ -7,7 +7,7 @@ IS_RELEASE=false
 IS_HOTFIX=false
 
 PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
-BUILD_BRANCH=$(echo `curl -s $PR_URL | jq -r .head.ref`; fi)
+BUILD_BRANCH=$(echo `curl -s $PR_URL | jq -r .head.ref`)
 
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
