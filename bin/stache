@@ -20,7 +20,7 @@ function getBase(args, cli, cwd) {
     var isCLI = false,
         tasks = [
             'cliversion',
-            'copyBuild',
+            'commitBuild',
             'deploy',
             'new',
             'release'

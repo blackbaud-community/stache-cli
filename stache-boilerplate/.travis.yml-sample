@@ -8,7 +8,7 @@ script:
   - stache build --config=stache.yml,stache.prod.yml,$STACHE_CLI/stache.deploy.yml,stache.deploy.yml
 
 after_success:
-  - stache copyBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
+  - stache commitBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
 
 cache:
   directories:

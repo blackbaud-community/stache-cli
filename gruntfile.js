@@ -14,7 +14,7 @@ module.exports = function (grunt) {
   function taskCopyBuild() {
     var env;
     env = getConfigEnvironmentString();
-    grunt.task.run('shell:copyBuild:' + env);
+    grunt.task.run('shell:commitBuild:' + env);
   }
 
   function taskDeploy() {
@@ -95,7 +95,7 @@ module.exports = function (grunt) {
   );
 
   grunt.registerTask(
-    'copyBuild',
+    'commitBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
     taskCopyBuild
   );
@@ -159,9 +159,9 @@ module.exports = function (grunt) {
           stdout: true
         }
       },
-      copyBuild: {
+      commitBuild: {
         command: function (env) {
-          return env + 'bash ' + grunt.option('cli') + 'scripts/copy-build.sh';
+          return env + 'bash ' + grunt.option('cli') + 'scripts/commit-build.sh';
         }
       },
       deploy: {
