@@ -3,102 +3,130 @@
 # Fail the build if this step fails
 set -e
 
-IS_RELEASE=false
-IS_HOTFIX=false
+# No need to commit the build during a pull request.
+if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then
+  exit 0
+fi
 
-PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
-echo "GET Pull Request: ${PR_URL}"
-BUILD_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR_URL | jq -r .head.ref`; fi)
-
+# Capture the last commit's message
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
-echo "LAST_COMMIT_MESSAGE: ${LAST_COMMIT_MESSAGE}"
 
-# Regex matches 'Release vX.X.X' format
-REGEX_RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
-REGEX_HOTFIX_COMMENT="(^Merge pull request).*(\/hotfix)"
+# Is the commit asking to be deployed?
+REGEX_DEPLOY_COMMENT="(^Merge pull request).*(\/release|\/hotfix)"
 
-# Regex matches master,rc-,release
-REGEX_RELEASE_BRANCH="^(master|rc-|release)"
-REGEX_HOTFIX_BRANCH="^${STACHE_DEPLOY_PROD_BRANCH}"
+# Is the base branch the develop branch?
+if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
 
-# Is this commit requesting a release to production?
-if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+  echo "Commiting build results to ${STACHE_DEPLOY_TEST_BRANCH}...";
 
-  # Is the current branch a release-able branch?
-  if [[ $BUILD_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+# Is the base branch the master branch?
+elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
 
-    # Does the commit message match the appropriate pattern?
-    if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
-      IS_RELEASE=true;
-    fi
+  # Is this commit a release or hotfix?
+  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_COMMENT ]]; then
 
-  # Is the current branch a hotfix branch?
-  #elif [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
-  elif [[ $LAST_COMMIT_MESSAGE =~ $REGEX_HOTFIX_COMMENT ]]; then
+    echo "Commiting build results to ${STACHE_DEPLOY_PROD_BRANCH}...";
 
-    # Is the base branch the production branch?
-    if [[ "$TRAVIS_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
-      IS_HOTFIX=true;
-    fi
   fi
 fi
 
-echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-echo "BUILD_BRANCH: ${BUILD_BRANCH}"
-echo "IS_RELEASE: ${IS_RELEASE}"
-echo "IS_HOTFIX: ${IS_HOTFIX}"
-
-git config --global user.email "stache-build-user@blackbaud.com"
-git config --global user.name "Blackbaud Stache Build User"
-
-if [[ "$IS_HOTFIX" == "true" ]]; then
-
-  echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-  git add --all
-  git stash
-  git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-  #rm -rf $STACHE_BUILD_DIRECTORY
-  git stash apply
-  git add --all
-  git status
-  git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-  git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
-  git status
-  echo "Done."
-
-else
-
-  # Push commits to deploy branches if we're on the master branch
-  if [[ "$TRAVIS_BRANCH" == "master" ]]; then
-    if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
-
-      # push to STACHE_DEPLOY_TEST_BRANCH
-      git add --all
-      git stash
-      git checkout $STACHE_DEPLOY_TEST_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
-      #rm -rf $STACHE_BUILD_DIRECTORY
-      git stash apply
-      git add --all
-      git status
-
-      if ! git diff-index --quiet HEAD --; then
-        echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
-        git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-        git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
-        echo "Done."
-
-        # Push to STACHE_DEPLOY_PROD_BRANCH
-        if [[ "$IS_RELEASE" == "true" ]]; then
-          echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-          git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-          git merge $STACHE_DEPLOY_TEST_BRANCH
-          git status
-          git push -fq origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH
-          git status
-          echo "Done."
-        fi
-      fi
-    fi
-  fi
-fi
+#
+# IS_RELEASE=false
+# IS_HOTFIX=false
+#
+# PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
+# echo "GET Pull Request: ${PR_URL}"
+# BUILD_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR_URL | jq -r .head.ref`; fi)
+#
+# LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
+# echo "LAST_COMMIT_MESSAGE: ${LAST_COMMIT_MESSAGE}"
+#
+# # Regex matches 'Release vX.X.X' format
+# REGEX_RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
+# REGEX_HOTFIX_COMMENT="(^Merge pull request).*(\/hotfix)"
+#
+# # Regex matches master,rc-,release
+# REGEX_RELEASE_BRANCH="^(master|rc-|release)"
+# REGEX_HOTFIX_BRANCH="^${STACHE_DEPLOY_PROD_BRANCH}"
+#
+# # Is this commit requesting a release to production?
+# if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+#
+#   # Is the current branch a release-able branch?
+#   if [[ $BUILD_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+#
+#     # Does the commit message match the appropriate pattern?
+#     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
+#       IS_RELEASE=true;
+#     fi
+#
+#   # Is the current branch a hotfix branch?
+#   #elif [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
+#   elif [[ $LAST_COMMIT_MESSAGE =~ $REGEX_HOTFIX_COMMENT ]]; then
+#
+#     # Is the base branch the production branch?
+#     if [[ "$TRAVIS_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
+#       IS_HOTFIX=true;
+#     fi
+#   fi
+# fi
+#
+# echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+# echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+# echo "BUILD_BRANCH: ${BUILD_BRANCH}"
+# echo "IS_RELEASE: ${IS_RELEASE}"
+# echo "IS_HOTFIX: ${IS_HOTFIX}"
+#
+# git config --global user.email "stache-build-user@blackbaud.com"
+# git config --global user.name "Blackbaud Stache Build User"
+#
+# if [[ "$IS_HOTFIX" == "true" ]]; then
+#
+#   echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
+#   git add --all
+#   git stash
+#   git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+#   #rm -rf $STACHE_BUILD_DIRECTORY
+#   git stash apply
+#   git add --all
+#   git status
+#   git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+#   git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+#   git status
+#   echo "Done."
+#
+# else
+#
+#   # Push commits to deploy branches if we're on the master branch
+#   if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+#     if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
+#
+#       # push to STACHE_DEPLOY_TEST_BRANCH
+#       git add --all
+#       git stash
+#       git checkout $STACHE_DEPLOY_TEST_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
+#       #rm -rf $STACHE_BUILD_DIRECTORY
+#       git stash apply
+#       git add --all
+#       git status
+#
+#       if ! git diff-index --quiet HEAD --; then
+#         echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
+#         git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+#         git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
+#         echo "Done."
+#
+#         # Push to STACHE_DEPLOY_PROD_BRANCH
+#         if [[ "$IS_RELEASE" == "true" ]]; then
+#           echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
+#           git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+#           git merge $STACHE_DEPLOY_TEST_BRANCH
+#           git status
+#           git push -fq origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH
+#           git status
+#           echo "Done."
+#         fi
+#       fi
+#     fi
+#   fi
+# fi
