@@ -7,7 +7,7 @@ IS_RELEASE=false
 IS_HOTFIX=false
 
 PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
-BUILD_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR_URL | jq -r .head.ref`; fi)
+BUILD_BRANCH=$(echo `curl -s $PR_URL | jq -r .head.ref`; fi)
 
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
@@ -40,6 +40,7 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 fi
 
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 echo "BUILD_BRANCH: ${BUILD_BRANCH}"
 echo "IS_RELEASE: ${IS_RELEASE}"
 echo "IS_HOTFIX: ${IS_HOTFIX}"
