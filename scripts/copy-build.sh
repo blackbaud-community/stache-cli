@@ -11,7 +11,7 @@ echo "STACHE_DEPLOY_TEST_BRANCH=${STACHE_DEPLOY_TEST_BRANCH}";
 echo "STACHE_DEPLOY_PROD_BRANCH=${STACHE_DEPLOY_PROD_BRANCH}";
 
 # No need to commit the build during a pull request.
-if [[ "$TRAVIS_PULL_REQUEST" == "true" ]]; then
+if [[ "$TRAVIS_EVENT_TYPE" == "pull_request" ]]; then
   echo "Deployment halted. Exiting script.";
   exit 0
 fi
