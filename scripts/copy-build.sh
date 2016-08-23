@@ -20,6 +20,7 @@ git config --global user.name "Blackbaud Stache Build User"
 
 commit_build() {
   echo "Committing build results to ${1}...";
+  git status
   git add --all
   git stash save
   git checkout $1 --quiet || git checkout -b $1
