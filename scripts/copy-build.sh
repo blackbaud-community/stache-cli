@@ -20,7 +20,7 @@ fi
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
 # Is the commit asking to be deployed?
-REGEX_DEPLOY_COMMENT="(^Merge pull request).*(\/release|\/hotfix)"
+REGEX_DEPLOY_COMMENT="(^Merge pull request).*(${STACHE_MASTER_BRANCH}\/release|${STACHE_MASTER_BRANCH}\/hotfix)"
 
 # Is the base branch the develop branch?
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
