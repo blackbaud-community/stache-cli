@@ -25,10 +25,17 @@ commit_build() {
   git checkout $1 --quiet || git checkout -b $1
   git stash pop
   git add --all
-  git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-  git push -fq origin $1
+  git status
+  if ! git diff-index --quiet HEAD --; then
+    git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+    git push -fq origin $1
+  fi
+  git status
   echo "Done."
 }
+
+echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
+echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 
 # Is the base branch the develop branch?
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
