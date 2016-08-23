@@ -28,15 +28,19 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
       IS_RELEASE=true;
     fi
+
+  # Is the current branch a hotfix branch?
+  elif [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
+
+    # Is the base branch the production branch?
+    if [[ "$TRAVIS_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
+      IS_HOTFIX=true;
+    fi
   fi
 fi
 
-if [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
-  IS_HOTFIX=true;
-fi
-
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-echo "BUILD_BRANCH: $BUILD_BRANCH"
+echo "BUILD_BRANCH: ${BUILD_BRANCH}"
 echo "IS_RELEASE: ${IS_RELEASE}"
 echo "IS_HOTFIX: ${IS_HOTFIX}"
 
@@ -44,27 +48,23 @@ git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
 
 if [[ "$IS_HOTFIX" == "true" ]]; then
-  if [[ "$BUILD_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
-    if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
-      echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-      git add --all
-      git stash
-      git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-      rm -rf $STACHE_BUILD_DIRECTORY
-      git stash apply
-      git add --all
-      git status
-      git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
-      git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
-      git status
-
-    fi
-  fi
+  echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
+  git add --all
+  git stash
+  git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+  rm -rf $STACHE_BUILD_DIRECTORY
+  git stash apply
+  git add --all
+  git status
+  git commit -am "Hotfix built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+  git push -fq origin $STACHE_DEPLOY_PROD_BRANCH
+  git status
+  echo "Done."
 
 else
 
-  # Push commits to deploy branches if we're on the master branch, or if it's a release.
+  # Push commits to deploy branches if we're on the master branch
   if [[ "$BUILD_BRANCH" == "master" ]]; then
     if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
@@ -81,6 +81,7 @@ else
         echo "Pushing to deployment test branch, ${STACHE_DEPLOY_TEST_BRANCH}..."
         git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
         git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
+        echo "Done."
 
         # Push to STACHE_DEPLOY_PROD_BRANCH
         if [[ "$IS_RELEASE" == "true" ]]; then
@@ -90,6 +91,7 @@ else
           git status
           git push -fq origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH
           git status
+          echo "Done."
         fi
       fi
     fi
