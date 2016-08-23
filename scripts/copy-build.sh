@@ -7,16 +7,19 @@ IS_RELEASE=false
 IS_HOTFIX=false
 
 PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
-BUILD_BRANCH=$(echo `curl -s $PR_URL | jq -r .head.ref`)
+echo "GET Pull Request: ${PR_URL}"
+BUILD_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR_URL | jq -r .head.ref`; fi)
 
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
+echo "LAST_COMMIT_MESSAGE: ${LAST_COMMIT_MESSAGE}"
 
 # Regex matches 'Release vX.X.X' format
 REGEX_RELEASE_COMMENT="^Release v[0-9]+\.[0-9]+\.[0-9]+"
+REGEX_HOTFIX_COMMENT="(^Merge pull request).*(\/hotfix)"
 
 # Regex matches master,rc-,release
 REGEX_RELEASE_BRANCH="^(master|rc-|release)"
-REGEX_HOTFIX_BRANCH="^(hotfix-|fix-)"
+REGEX_HOTFIX_BRANCH="^${STACHE_DEPLOY_PROD_BRANCH}"
 
 # Is this commit requesting a release to production?
 if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
@@ -30,7 +33,8 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
     fi
 
   # Is the current branch a hotfix branch?
-  elif [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
+  #elif [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
+  elif [[ $LAST_COMMIT_MESSAGE =~ $REGEX_HOTFIX_COMMENT ]]; then
 
     # Is the base branch the production branch?
     if [[ "$TRAVIS_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
