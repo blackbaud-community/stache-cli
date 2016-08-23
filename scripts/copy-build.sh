@@ -22,7 +22,7 @@ commit_build() {
   echo "Committing build results to ${1}...";
   git add --all
   git stash save
-  git checkout $1 --quiet || git checkout -b $1
+  git checkout -b $1
   git stash pop
   git add --all
   git status
@@ -39,7 +39,19 @@ echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
 
 # Is the base branch the develop branch?
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
-  commit_build $STACHE_DEPLOY_TEST_BRANCH
+  echo "Committing build results to ${STACHE_DEPLOY_TEST_BRANCH}...";
+  git add --all
+  git stash save
+  git checkout -b $STACHE_DEPLOY_TEST_BRANCH
+  git stash pop
+  git add --all
+  git status
+  if ! git diff-index --quiet HEAD --; then
+    git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
+    git push -fq origin $STACHE_DEPLOY_TEST_BRANCH
+  fi
+  git status
+  echo "Done."
 
 # Is the base branch the master branch?
 elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
