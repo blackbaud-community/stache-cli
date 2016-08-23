@@ -57,7 +57,7 @@ if [[ "$IS_HOTFIX" == "true" ]]; then
   echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
   git add --all
   git stash
-  git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+  git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
   rm -rf $STACHE_BUILD_DIRECTORY
   git stash apply
   git add --all
@@ -70,13 +70,13 @@ if [[ "$IS_HOTFIX" == "true" ]]; then
 else
 
   # Push commits to deploy branches if we're on the master branch
-  if [[ "$BUILD_BRANCH" == "master" ]]; then
+  if [[ "$TRAVIS_BRANCH" == "master" ]]; then
     if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
       # push to STACHE_DEPLOY_TEST_BRANCH
       git add --all
       git stash
-      git checkout -b $STACHE_DEPLOY_TEST_BRANCH
+      git checkout $STACHE_DEPLOY_TEST_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
       rm -rf $STACHE_BUILD_DIRECTORY
       git stash apply
       git add --all
@@ -91,7 +91,7 @@ else
         # Push to STACHE_DEPLOY_PROD_BRANCH
         if [[ "$IS_RELEASE" == "true" ]]; then
           echo "Pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
-          git checkout -b $STACHE_DEPLOY_PROD_BRANCH
+          git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
           git merge $STACHE_DEPLOY_TEST_BRANCH
           git status
           git push -fq origin $STACHE_DEPLOY_TEST_BRANCH:$STACHE_DEPLOY_PROD_BRANCH
