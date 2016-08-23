@@ -58,7 +58,7 @@ if [[ "$IS_HOTFIX" == "true" ]]; then
   git add --all
   git stash
   git checkout $STACHE_DEPLOY_PROD_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_PROD_BRANCH
-  rm -rf $STACHE_BUILD_DIRECTORY
+  #rm -rf $STACHE_BUILD_DIRECTORY
   git stash apply
   git add --all
   git status
@@ -77,7 +77,7 @@ else
       git add --all
       git stash
       git checkout $STACHE_DEPLOY_TEST_BRANCH --quiet || git checkout -b $STACHE_DEPLOY_TEST_BRANCH
-      rm -rf $STACHE_BUILD_DIRECTORY
+      #rm -rf $STACHE_BUILD_DIRECTORY
       git stash apply
       git add --all
       git status
