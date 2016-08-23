@@ -21,9 +21,9 @@ git config --global user.name "Blackbaud Stache Build User"
 commit_build() {
   echo "Committing build results to ${1}...";
   git add --all
-  git stash
+  git stash save
   git checkout $1 --quiet || git checkout -b $1
-  git stash apply
+  git stash pop
   git add --all
   git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
   git push -fq origin $1
