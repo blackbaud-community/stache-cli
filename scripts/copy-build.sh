@@ -4,7 +4,11 @@
 set -e
 
 IS_RELEASE=false
-IS_HOTFIX=false;
+IS_HOTFIX=false
+
+PR_URL=https://api.github.com/repos/$TRAVIS_REPO_SLUG/pulls/$TRAVIS_PULL_REQUEST
+BUILD_BRANCH=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then echo $TRAVIS_BRANCH; else echo `curl -s $PR_URL | jq -r .head.ref`; fi)
+
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
 # Regex matches 'Release vX.X.X' format
@@ -18,7 +22,7 @@ REGEX_HOTFIX_BRANCH="^(hotfix-|fix-)"
 if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
   # Is the current branch a release-able branch?
-  if [[ $TRAVIS_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
+  if [[ $BUILD_BRANCH =~ $REGEX_RELEASE_BRANCH ]]; then
 
     # Does the commit message match the appropriate pattern?
     if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_RELEASE_COMMENT ]]; then
@@ -27,12 +31,12 @@ if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
   fi
 fi
 
-if [[ $TRAVIS_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
+if [[ $BUILD_BRANCH =~ $REGEX_HOTFIX_BRANCH ]]; then
   IS_HOTFIX=true;
 fi
 
 echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
+echo "BUILD_BRANCH: $BUILD_BRANCH"
 echo "IS_RELEASE: ${IS_RELEASE}"
 echo "IS_HOTFIX: ${IS_HOTFIX}"
 
@@ -40,7 +44,7 @@ git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
 
 if [[ "$IS_HOTFIX" == "true" ]]; then
-  if [[ "$TRAVIS_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
+  if [[ "$BUILD_BRANCH" == "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
     if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
       echo "Hotfix pushing to deployment production branch, ${STACHE_DEPLOY_PROD_BRANCH}..."
@@ -61,7 +65,7 @@ if [[ "$IS_HOTFIX" == "true" ]]; then
 else
 
   # Push commits to deploy branches if we're on the master branch, or if it's a release.
-  if [[ "$TRAVIS_BRANCH" == "master" ]]; then
+  if [[ "$BUILD_BRANCH" == "master" ]]; then
     if [[ "$TRAVIS_EVENT_TYPE" == "push" ]]; then
 
       # push to STACHE_DEPLOY_TEST_BRANCH
