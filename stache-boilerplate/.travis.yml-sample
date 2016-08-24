@@ -6,8 +6,6 @@ before_script:
 script:
   - export STACHE_CLI=/home/travis/.nvm/$(node --version)/lib/node_modules/blackbaud-stache-cli
   - stache build --config=stache.yml,stache.prod.yml,$STACHE_CLI/stache.deploy.yml,stache.deploy.yml
-
-after_success:
   - stache commitBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
 
 cache:
