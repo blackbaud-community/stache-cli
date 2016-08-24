@@ -149,10 +149,12 @@ module.exports = function (grunt) {
     },
     exec: {
       commitBuild: {
-        command: 'bash ' + grunt.option('cli') + 'scripts/commit-build.sh'
+        command: 'bash ' + grunt.option('cli') + 'scripts/commit-build.sh',
+        cwd: grunt.option('cwd')
       },
       deploy: {
         command: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
+        cwd: grunt.option('cwd')
       }
     }
   });
