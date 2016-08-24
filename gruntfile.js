@@ -166,7 +166,8 @@ module.exports = function (grunt) {
       },
       deploy: {
         command: function (env) {
-          return env + 'bash ' + grunt.option('cli') + 'scripts/deploy.sh';
+          // Azure environments use `set MY_VAR=foo`
+          return 'set ' + env + 'bash ' + grunt.option('cli') + 'scripts/deploy.sh';
         }
       }
     }
