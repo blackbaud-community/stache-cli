@@ -1,13 +1,15 @@
 module.exports = function (grunt) {
-  var exec,
+  var environment,
+      exec,
       merge,
       path;
 
   path = require('path');
   exec = require('child_process').execSync;
   merge = require('merge');
+  environment = process.env;
 
-  function getConfigEnvironmentString() {
+  function addConfigEnvironmentVariables() {
     var config,
         env,
         filePath,
@@ -22,31 +24,24 @@ module.exports = function (grunt) {
       config = merge.recursive(true, config, grunt.file.readYAML(filePath));
     }
 
-    // Create a string of environment variables.
-    for (k in config.env) {
-      if (config.env.hasOwnProperty(k)) {
-        env.push(k + '=' + config.env[k]);
-      }
-    }
-    env = env.join(' ') + ' ';
-    return env;
+    environment = merge.recursive(true, process.env, config.env || {});
   }
 
   function taskCliVersion() {
     grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
   }
 
-  function taskCopyBuild() {
-    var env;
-    env = getConfigEnvironmentString();
-    grunt.task.run('shell:commitBuild:' + env);
+  function taskCommitBuild() {
+    addConfigEnvironmentVariables();
+    grunt.config('exec.commitBuild.options.env', environment);
+    grunt.task.run('exec:commitBuild');
   }
 
   function taskDeploy() {
-    var env;
-    env = getConfigEnvironmentString();
+    addConfigEnvironmentVariables();
+    grunt.config('exec.deploy.options.env', environment);
     grunt.task.run('cliversion');
-    grunt.task.run('shell:deploy:' + env);
+    grunt.task.run('exec:deploy');
   }
 
   function taskFixIgnore() {
@@ -79,7 +74,7 @@ module.exports = function (grunt) {
   // Load necessary modules
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-bump');
-  grunt.loadNpmTasks('grunt-shell');
+  grunt.loadNpmTasks('grunt-exec');
 
   // Register our tasks
   grunt.registerTask(
@@ -97,7 +92,7 @@ module.exports = function (grunt) {
   grunt.registerTask(
     'commitBuild',
     'Copies the results of a Travis-CI build to the deploy branch',
-    taskCopyBuild
+    taskCommitBuild
   );
 
   grunt.registerTask(
@@ -152,23 +147,12 @@ module.exports = function (grunt) {
         ]
       }
     },
-    shell: {
-      options: {
-        execOptions: {
-          cwd: grunt.option('cwd'),
-          stdout: true
-        }
-      },
+    exec: {
       commitBuild: {
-        command: function (env) {
-          return env + 'bash ' + grunt.option('cli') + 'scripts/commit-build.sh';
-        }
+        command: 'bash ' + grunt.option('cli') + 'scripts/commit-build.sh'
       },
       deploy: {
-        command: function (env) {
-          // Azure environments use `set MY_VAR=foo`
-          return 'set ' + env + 'bash ' + grunt.option('cli') + 'scripts/deploy.sh';
-        }
+        command: 'bash ' + grunt.option('cli') + 'scripts/deploy.sh',
       }
     }
   });
