@@ -7,23 +7,6 @@ module.exports = function (grunt) {
   exec = require('child_process').execSync;
   merge = require('merge');
 
-  function taskCliVersion() {
-    grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
-  }
-
-  function taskCopyBuild() {
-    var env;
-    env = getConfigEnvironmentString();
-    grunt.task.run('shell:commitBuild:' + env);
-  }
-
-  function taskDeploy() {
-    var env;
-    env = getConfigEnvironmentString();
-    grunt.task.run('cliversion');
-    grunt.task.run('shell:deploy:' + env);
-  }
-
   function getConfigEnvironmentString() {
     var config,
         env,
@@ -47,6 +30,23 @@ module.exports = function (grunt) {
     }
     env = env.join(' ') + ' ';
     return env;
+  }
+
+  function taskCliVersion() {
+    grunt.log.writeln('Current stache-cli version: ' + grunt.file.readJSON('package.json').version);
+  }
+
+  function taskCopyBuild() {
+    var env;
+    env = getConfigEnvironmentString();
+    grunt.task.run('shell:commitBuild:' + env);
+  }
+
+  function taskDeploy() {
+    var env;
+    env = getConfigEnvironmentString();
+    grunt.task.run('cliversion');
+    grunt.task.run('shell:deploy:' + env);
   }
 
   function taskFixIgnore() {

@@ -34,9 +34,6 @@ commit_build() {
   echo "Done."
 }
 
-echo "TRAVIS_EVENT_TYPE: ${TRAVIS_EVENT_TYPE}"
-echo "TRAVIS_BRANCH: ${TRAVIS_BRANCH}"
-
 # Is the base branch the develop branch?
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
   commit_build $STACHE_DEPLOY_TEST_BRANCH
