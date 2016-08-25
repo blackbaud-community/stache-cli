@@ -1,10 +1,8 @@
 module.exports = function (grunt) {
   var environment,
       exec,
-      merge,
-      path;
+      merge;
 
-  path = require('path');
   exec = require('child_process').execSync;
   merge = require('merge');
   environment = process.env;
@@ -63,17 +61,8 @@ module.exports = function (grunt) {
     }
   }
 
-  function taskRelease(type) {
-    type = type || 'patch';
-    exec('grunt --base ' + grunt.option('cwd') + ' bump:' + type, {
-      cwd: path.resolve(),
-      stdio: 'inherit'
-    });
-  }
-
   // Load necessary modules
   grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-bump');
   grunt.loadNpmTasks('grunt-exec');
 
   // Register our tasks
@@ -107,33 +96,8 @@ module.exports = function (grunt) {
     taskNew
   );
 
-  grunt.registerTask(
-    'release',
-    'Create a new release branch and commit to upstream.',
-    taskRelease
-  );
-
   // Configure necessary modules
   grunt.config.init({
-    bump: {
-      options: {
-        files: ['package.json'],
-        updateConfigs: [],
-        commit: true,
-        commitMessage: 'Release v%VERSION%',
-        commitFiles: ['package.json'],
-        createTag: false,
-        tagName: 'v%VERSION%',
-        tagMessage: 'Version %VERSION%',
-        push: true,
-        pushTo: 'origin',
-        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
-        globalReplace: false,
-        prereleaseName: false,
-        metadata: '',
-        regExp: false
-      }
-    },
     copy: {
       boilerplate: {
         files: [

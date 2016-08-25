@@ -22,8 +22,7 @@ function getBase(args, cli, cwd) {
             'cliversion',
             'commitBuild',
             'deploy',
-            'new',
-            'release'
+            'new'
         ];
     if (args && args.length > 2) {
         tasks.forEach(function (task) {
