@@ -20,7 +20,6 @@
   },
   "dependencies": {
     "grunt": "^1.0.1",
-    "grunt-bump": "^0.8.0",
     "grunt-cli": "^1.2.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-exec": "^1.0.0",
