@@ -1,25 +1,19 @@
 module.exports = function (grunt) {
   var environment,
-      exec,
       merge;
 
-  exec = require('child_process').execSync;
   merge = require('merge');
   environment = process.env;
 
   function addConfigEnvironmentVariables() {
     var config,
-        env,
-        filePath,
-        k;
+        filePath;
 
     filePath = grunt.option('config');
-    config = grunt.file.readYAML('stache.deploy.yml');
-    env = [];
+    config = {};
 
-    // Merge deployment config.
     if (filePath && grunt.file.exists(filePath)) {
-      config = merge.recursive(true, config, grunt.file.readYAML(filePath));
+      config = grunt.file.readYAML(filePath);
     }
 
     environment = merge.recursive(true, process.env, config.env || {});
