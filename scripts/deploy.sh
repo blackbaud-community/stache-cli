@@ -89,19 +89,19 @@ sync() {
   exitWithMessageOnError "Kudu Sync to Target failed"
 }
 
-# Set the build directory
-if [[ ! -n "$STACHE_BUILD_DIRECTORY" ]]; then
-  STACHE_BUILD_DIRECTORY="build"
-fi
-
 # MAIN ENTRY POINT
 notifySlack "Stache build started."
 selectNodeVersion
 
 # Only run install and build if Travis-CI hasn't done it already.
 if [ ! -e "$DEPLOYMENT_SOURCE/.travis.yml" ]; then
+  if [[ ! -n "$STACHE_BUILD_DIRECTORY" ]]; then
+    STACHE_BUILD_DIRECTORY="build"
+  fi
   install
   build
+elif [[ ! -n "$STACHE_BUILD_DIRECTORY" ]]; then
+  STACHE_BUILD_DIRECTORY="deploy"
 fi
 
 sync

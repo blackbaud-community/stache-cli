@@ -1,9 +1,17 @@
 module.exports = function (grunt) {
-  var environment,
+  var envDefaults,
+      environment,
       merge;
 
   merge = require('merge');
   environment = process.env;
+  envDefaults = {
+    STACHE_DEPLOY_TEST_BRANCH: deploy,
+    STACHE_DEPLOY_PROD_BRANCH: deploy,
+    STACHE_MASTER_BRANCH: master,
+    STACHE_DEVELOP_BRANCH: master,
+    STACHE_GITHUB_ORG: blackbaud
+  };
 
   function addConfigEnvironmentVariables() {
     var config,
@@ -12,11 +20,11 @@ module.exports = function (grunt) {
     filePath = grunt.option('config');
     config = {};
 
-    if (filePath && grunt.file.exists(filePath)) {
+    if (filePath && filePath.indexOf('.yml') > -1 && grunt.file.exists(filePath)) {
       config = grunt.file.readYAML(filePath);
     }
 
-    environment = merge.recursive(true, process.env, config.env || {});
+    environment = merge.recursive(true, envDefaults, config.env || {}, environment);
   }
 
   function taskCliVersion() {
