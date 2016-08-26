@@ -6,11 +6,11 @@ module.exports = function (grunt) {
   merge = require('merge');
   environment = process.env;
   envDefaults = {
-    STACHE_DEPLOY_TEST_BRANCH: deploy,
-    STACHE_DEPLOY_PROD_BRANCH: deploy,
-    STACHE_MASTER_BRANCH: master,
-    STACHE_DEVELOP_BRANCH: master,
-    STACHE_GITHUB_ORG: blackbaud
+    STACHE_DEPLOY_TEST_BRANCH: 'deploy',
+    STACHE_DEPLOY_PROD_BRANCH: 'deploy',
+    STACHE_MASTER_BRANCH: 'master',
+    STACHE_DEVELOP_BRANCH: 'master',
+    STACHE_GITHUB_ORG: 'blackbaud'
   };
 
   function addConfigEnvironmentVariables() {
