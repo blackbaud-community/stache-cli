@@ -1,17 +1,9 @@
 module.exports = function (grunt) {
-  var envDefaults,
-      environment,
+  var environment,
       merge;
 
   merge = require('merge');
   environment = process.env;
-  envDefaults = {
-    STACHE_DEPLOY_TEST_BRANCH: 'deploy',
-    STACHE_DEPLOY_PROD_BRANCH: 'deploy',
-    STACHE_MASTER_BRANCH: 'master',
-    STACHE_DEVELOP_BRANCH: 'master',
-    STACHE_GITHUB_ORG: 'blackbaud'
-  };
 
   function addConfigEnvironmentVariables() {
     var config,
@@ -24,7 +16,7 @@ module.exports = function (grunt) {
       config = grunt.file.readYAML(filePath);
     }
 
-    environment = merge.recursive(true, envDefaults, config.env || {}, environment);
+    environment = merge.recursive(true, config.env || {}, environment);
   }
 
   function taskCliVersion() {

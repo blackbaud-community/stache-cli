@@ -8,6 +8,23 @@ if [[ "$TRAVIS_EVENT_TYPE" == "pull_request" ]]; then
   exit 0
 fi
 
+# Set defaults.
+if [[ ! -n "$STACHE_DEPLOY_TEST_BRANCH" ]]; then
+  STACHE_DEPLOY_TEST_BRANCH="deploy"
+fi
+if [[ ! -n "$STACHE_DEPLOY_PROD_BRANCH" ]]; then
+  STACHE_DEPLOY_PROD_BRANCH="deploy"
+fi
+if [[ ! -n "$STACHE_MASTER_BRANCH" ]]; then
+  STACHE_MASTER_BRANCH="master"
+fi
+if [[ ! -n "$STACHE_DEVELOP_BRANCH" ]]; then
+  STACHE_DEVELOP_BRANCH="master"
+fi
+if [[ ! -n "$STACHE_GITHUB_ORG" ]]; then
+  STACHE_GITHUB_ORG="blackbaud"
+fi
+
 # Capture the last commit's message
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
