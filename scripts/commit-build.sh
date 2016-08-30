@@ -36,7 +36,7 @@ git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
 
 commit_build() {
-  echo "Committing build results to ${1}...";
+  echo "Committing build results to ${1}..."
   git status --short
   if ! git diff-index --quiet HEAD --; then
     git add --all
@@ -46,6 +46,8 @@ commit_build() {
     git add --all
     git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
     git push -fq origin $1
+  else
+    echo "No changes detected. Aborting commit."
   fi
   git status --short
   echo "Done."
