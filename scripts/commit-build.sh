@@ -37,17 +37,17 @@ git config --global user.name "Blackbaud Stache Build User"
 
 commit_build() {
   echo "Committing build results to ${1}...";
-  git status
-  git add --all
-  git stash save
-  git checkout $1 --quiet || git checkout -b $1
-  git stash pop
-  git add --all
-  if ! git diff-index --quiet HEAD --; then
+  git status --short
+  if [[ ! git diff-index --quiet HEAD -- ]]; then
+    git add --all
+    git stash save
+    git checkout $1 --quiet || git checkout -b $1
+    git stash pop
+    git add --all
     git commit -am "Built via Travis Build #${TRAVIS_BUILD_NUMBER}"
     git push -fq origin $1
   fi
-  git status
+  git status --short
   echo "Done."
 }
 
