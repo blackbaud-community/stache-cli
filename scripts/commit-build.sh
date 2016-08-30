@@ -1,14 +1,20 @@
 #!/bin/bash
 
-# Fail the build if this step fails
+# ======================================================
+# Fail the build if this step encounters an error
+# ======================================================
 set -e
 
-# No need to commit the build during a pull request.
+# ======================================================
+# Abort commit if building a pull request
+# ======================================================
 if [[ "$TRAVIS_EVENT_TYPE" == "pull_request" ]]; then
   exit 0
 fi
 
-# Set defaults.
+# ======================================================
+# Defaults for environment variables
+# ======================================================
 if [[ ! -n "$STACHE_DEPLOY_TEST_BRANCH" ]]; then
   STACHE_DEPLOY_TEST_BRANCH="deploy"
 fi
@@ -25,16 +31,25 @@ if [[ ! -n "$STACHE_GITHUB_ORG" ]]; then
   STACHE_GITHUB_ORG="blackbaud"
 fi
 
+# ======================================================
 # Capture the last commit's message
+# ======================================================
 LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 
-# Is the commit asking to be deployed?
+# ======================================================
+# Is this commit deployable?
+# ======================================================
 REGEX_DEPLOY_COMMENT="(^Merge pull request).*(${STACHE_GITHUB_ORG}\/release|${STACHE_GITHUB_ORG}\/hotfix)"
 
-# Github configuration
+# ======================================================
+# Configure GitHub user
+# ======================================================
 git config --global user.email "stache-build-user@blackbaud.com"
 git config --global user.name "Blackbaud Stache Build User"
 
+# ======================================================
+# Commits the build results to a given branch
+# ======================================================
 commit_build() {
   echo "Committing build results to ${1}..."
   git status --short
@@ -53,14 +68,20 @@ commit_build() {
   echo "Done."
 }
 
-# Is the base branch the develop branch?
+# ======================================================
+# Is the build asking to be committed to test?
+# ======================================================
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
   commit_build $STACHE_DEPLOY_TEST_BRANCH
 
-# Is the base branch the master branch?
+# ======================================================
+# Is the build asking to be committed to prod?
+# ======================================================
 elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
 
-  # Is this commit a release or hotfix?
+  # ===============================================================
+  # Only commits from the release or hotfix branches are deployable
+  # ===============================================================
   if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_COMMENT ]]; then
     commit_build $STACHE_DEPLOY_PROD_BRANCH
   fi
