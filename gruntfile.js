@@ -5,7 +5,7 @@ module.exports = function (grunt) {
   merge = require('merge');
   environment = process.env;
 
-  function addConfigEnvironmentVariables() {
+  function addConfigVariablesToEnvironment() {
     var config,
         filePath;
 
@@ -24,13 +24,13 @@ module.exports = function (grunt) {
   }
 
   function taskCommitBuild() {
-    addConfigEnvironmentVariables();
+    addConfigVariablesToEnvironment();
     grunt.config('exec.commitBuild.options.env', environment);
     grunt.task.run('exec:commitBuild');
   }
 
   function taskDeploy() {
-    addConfigEnvironmentVariables();
+    addConfigVariablesToEnvironment();
     grunt.config('exec.deploy.options.env', environment);
     grunt.task.run('cliversion');
     grunt.task.run('exec:deploy');
