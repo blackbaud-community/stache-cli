@@ -3,7 +3,7 @@
     "name": "Blackbaud - Bobby Earl"
   },
   "name": "blackbaud-stache-cli",
-  "version": "0.3.14",
+  "version": "0.3.15",
   "description": "Blackbuad Stache CLI",
   "private": false,
   "preferGlobal": true,
