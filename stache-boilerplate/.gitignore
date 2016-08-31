@@ -2,6 +2,5 @@
 .tmp/
 Thumbs.db
 vendor/
-build/
 serve/
 node_modules/

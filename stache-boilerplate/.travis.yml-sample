@@ -1,0 +1,12 @@
+language: node_js
+
+before_script:
+  - npm i -g grunt-cli blackbaud-stache-cli
+
+script:
+  - stache build --config=stache.yml,stache.prod.yml,build:deploy/,stache.deploy.yml
+  - stache commitBuild --config=$TRAVIS_BUILD_DIR/stache.deploy.yml
+
+cache:
+  directories:
+    - node_modules
