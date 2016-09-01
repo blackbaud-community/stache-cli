@@ -53,8 +53,8 @@ git config --global user.name "Blackbaud Stache Build User"
 commit_build() {
   echo "Committing build results to ${1}..."
   git status --short
+  git add --all
   if ! git diff-index --quiet HEAD --; then
-    git add --all
     git stash save
     git checkout $1 --quiet || git checkout -b $1
     git stash pop
