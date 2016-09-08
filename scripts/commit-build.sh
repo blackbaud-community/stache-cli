@@ -39,7 +39,8 @@ LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
 # ======================================================
 # Is this commit deployable?
 # ======================================================
-REGEX_DEPLOY_COMMENT="(^Merge pull request).*(${STACHE_GITHUB_ORG}\/release|${STACHE_GITHUB_ORG}\/hotfix)"
+REGEX_DEPLOY_TEST_COMMENT="^Merge pull request"
+REGEX_DEPLOY_PROD_COMMENT="(^Merge pull request).*(${STACHE_GITHUB_ORG}\/release|${STACHE_GITHUB_ORG}\/hotfix)"
 
 # ======================================================
 # Configure GitHub user
@@ -53,8 +54,8 @@ git config --global user.name "Blackbaud Stache Build User"
 commit_build() {
   echo "Committing build results to ${1}..."
   git status --short
+  git add --all
   if ! git diff-index --quiet HEAD --; then
-    git add --all
     git stash save
     git checkout $1 --quiet || git checkout -b $1
     git stash pop
@@ -72,7 +73,9 @@ commit_build() {
 # Is the build asking to be committed to test?
 # ======================================================
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
-  commit_build $STACHE_DEPLOY_TEST_BRANCH
+  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_TEST_COMMENT ]]; then
+    commit_build $STACHE_DEPLOY_TEST_BRANCH
+  fi
 
 # ======================================================
 # Is the build asking to be committed to prod?
@@ -82,7 +85,7 @@ elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
   # ===============================================================
   # Only commits from the release or hotfix branches are deployable
   # ===============================================================
-  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_COMMENT ]]; then
+  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_PROD_COMMENT ]]; then
     commit_build $STACHE_DEPLOY_PROD_BRANCH
   fi
 fi
