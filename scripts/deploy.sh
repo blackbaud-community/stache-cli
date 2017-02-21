@@ -91,7 +91,7 @@ sync() {
 
 # MAIN ENTRY POINT
 STACHE_START_MSG="Stache build started. ($SCM_COMMIT_MESSAGE)"
-notifySlack STACHE_START_MSG
+notifySlack "$STACHE_START_MSG"
 selectNodeVersion
 
 # Only run install and build if Travis-CI hasn't done it already.
