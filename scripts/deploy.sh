@@ -90,7 +90,10 @@ sync() {
 }
 
 # MAIN ENTRY POINT
-notifySlack "Stache build started."
+
+# SCM_COMMIT_MESSAGE isn't avaible in our current version of Kudu'
+LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $SCM_COMMIT_ID`
+notifySlack "Stache build started. ($LAST_COMMIT_MESSAGE)"
 selectNodeVersion
 
 # Only run install and build if Travis-CI hasn't done it already.
