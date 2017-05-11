@@ -32,17 +32,6 @@ if [[ ! -n "$STACHE_GITHUB_ORG" ]]; then
 fi
 
 # ======================================================
-# Capture the last commit's message
-# ======================================================
-LAST_COMMIT_MESSAGE=`git log --format=%B -n 1 $TRAVIS_COMMIT`
-
-# ======================================================
-# Is this commit deployable?
-# ======================================================
-REGEX_DEPLOY_TEST_COMMENT="^Merge pull request"
-REGEX_DEPLOY_PROD_COMMENT="(^Merge pull request).*(${STACHE_GITHUB_ORG}\/release|${STACHE_GITHUB_ORG}\/hotfix)"
-
-# ======================================================
 # Configure GitHub user
 # ======================================================
 git config --global user.email "stache-build-user@blackbaud.com"
@@ -73,19 +62,11 @@ commit_build() {
 # Is the build asking to be committed to test?
 # ======================================================
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
-  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_TEST_COMMENT ]]; then
-    commit_build $STACHE_DEPLOY_TEST_BRANCH
-  fi
+  commit_build $STACHE_DEPLOY_TEST_BRANCH
 
 # ======================================================
 # Is the build asking to be committed to prod?
 # ======================================================
 elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
-
-  # ===============================================================
-  # Only commits from the release or hotfix branches are deployable
-  # ===============================================================
-  if [[ $LAST_COMMIT_MESSAGE =~ $REGEX_DEPLOY_PROD_COMMENT ]]; then
-    commit_build $STACHE_DEPLOY_PROD_BRANCH
-  fi
+  commit_build $STACHE_DEPLOY_PROD_BRANCH
 fi
