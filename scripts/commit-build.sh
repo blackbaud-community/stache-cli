@@ -62,11 +62,13 @@ commit_build() {
 # Is the build asking to be committed to test?
 # ======================================================
 if [[ "$TRAVIS_BRANCH" == "$STACHE_DEVELOP_BRANCH" ]]; then
+  echo "Commit build results to ${STACHE_DEPLOY_TEST_BRANCH} branch."
   commit_build $STACHE_DEPLOY_TEST_BRANCH
 
 # ======================================================
 # Is the build asking to be committed to prod?
 # ======================================================
 elif [[ "$TRAVIS_BRANCH" == "$STACHE_MASTER_BRANCH" ]]; then
+  echo "Commit build results to ${STACHE_DEPLOY_PROD_BRANCH} branch."
   commit_build $STACHE_DEPLOY_PROD_BRANCH
 fi
