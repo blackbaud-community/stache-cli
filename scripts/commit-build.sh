@@ -27,9 +27,6 @@ fi
 if [[ ! -n "$STACHE_DEVELOP_BRANCH" ]]; then
   STACHE_DEVELOP_BRANCH="master"
 fi
-if [[ ! -n "$STACHE_GITHUB_ORG" ]]; then
-  STACHE_GITHUB_ORG="blackbaud"
-fi
 
 # ======================================================
 # Configure GitHub user
